@@ -37,5 +37,33 @@ def describe():
         }), 500
 
 
+@app.route("/recommend", methods=["POST"])
+def recommend():
+
+    data = request.get_json()
+
+    if not data or "issue" not in data:
+        return jsonify({"error": "Invalid input"}), 400
+
+    issue = data["issue"]
+
+    if not isinstance(issue, str) or len(issue.strip()) < 5:
+        return jsonify({"error": "Issue must be valid"}), 400
+
+    try:
+        recommendations = client.generate_recommendations(issue)
+
+        return jsonify({
+            "recommendations": recommendations,
+            "generated_at": datetime.utcnow().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({
+            "error": "Internal server error",
+            "details": str(e)
+        }), 500
+
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)

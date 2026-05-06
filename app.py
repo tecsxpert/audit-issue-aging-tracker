@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from __future__ import annotations
 import logging
 import os
@@ -53,3 +54,74 @@ app = create_app()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 8000)))
+=======
+from flask import Flask, request, jsonify
+from services.groq_client import GroqClient
+from datetime import datetime
+
+app = Flask(__name__)
+client = GroqClient()
+
+
+@app.route("/describe", methods=["POST"])
+def describe():
+
+    data = request.get_json()
+
+    # ✅ Input validation
+    if not data or "issue" not in data:
+        return jsonify({"error": "Invalid input: 'issue' field required"}), 400
+
+    issue = data["issue"]
+
+    if not isinstance(issue, str) or len(issue.strip()) < 5:
+        return jsonify({"error": "Issue must be a valid string (min 5 chars)"}), 400
+
+    try:
+        # ✅ Call GroqClient
+        ai_response = client.generate_response(issue)
+
+        # ✅ Structured JSON response
+        return jsonify({
+            "description": ai_response,
+            "generated_at": datetime.utcnow().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({
+            "error": "Internal server error",
+            "details": str(e)
+        }), 500
+
+
+@app.route("/recommend", methods=["POST"])
+def recommend():
+
+    data = request.get_json()
+
+    if not data or "issue" not in data:
+        return jsonify({"error": "Invalid input"}), 400
+
+    issue = data["issue"]
+
+    if not isinstance(issue, str) or len(issue.strip()) < 5:
+        return jsonify({"error": "Issue must be valid"}), 400
+
+    try:
+        recommendations = client.generate_recommendations(issue)
+
+        return jsonify({
+            "recommendations": recommendations,
+            "generated_at": datetime.utcnow().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({
+            "error": "Internal server error",
+            "details": str(e)
+        }), 500
+
+
+if __name__ == "__main__":
+    app.run(port=5000, debug=True)
+>>>>>>> f3393327b2fa049bff12dc583fc68ce4df4bd227

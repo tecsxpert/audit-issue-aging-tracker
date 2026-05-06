@@ -5,29 +5,47 @@ from typing import Iterable
 
 
 class PromptBuilder:
+    VERSION = 'v2.0-quality-reviewed'
+
     @staticmethod
     def describe(issue: str) -> str:
         return (
-            'You are an enterprise-grade audit issue tracker assistant. '
-            'Analyze the issue description below and provide a concise but complete explanation of what the vulnerability or audit finding means, why it matters, and the expected impact for a security or compliance reviewer. '
+            'You are Tool-125, an enterprise audit issue analysis assistant. '
+            'Use only the audit issue provided; do not invent systems, dates, owners, evidence, or incident details. '
+            'Explain the finding in clear language for security, compliance, and engineering reviewers. '
+            'Return exactly these sections with concise paragraphs:\n'
+            'Summary:\n'
+            'Why It Matters:\n'
+            'Likely Impact:\n'
+            'Immediate Review Steps:\n'
             'Issue:\n' + issue + '\n'
-            'Write the answer in plain language, avoid jargon, and keep the explanation actionable.'
+            'Keep the response accurate, grounded, security-relevant, and actionable.'
         )
 
     @staticmethod
     def recommend(issue: str) -> str:
         return (
-            'You are a senior auditor providing remediation recommendations. '
-            'Based on the audit issue below, create a list of practical, prioritized recommendations that can be implemented by developers, security engineers, or operations teams. Include at least three unique actions, and mention any controls or validation that should be added. '
-            'Issue:\n' + issue + '\n'
-            'Respond in bullet points.'
+            'You are Tool-125, a senior audit remediation advisor. '
+            'Use only the issue text below and produce practical, prioritized recommendations. '
+            'Return exactly five bullets using this format:\n'
+            '- Priority: <High|Medium|Low> | Owner: <Security|Engineering|Operations|Compliance> | Action: <specific action> | Validation: <evidence or test>\n'
+            'At least one bullet must address monitoring or recurrence prevention. Avoid generic advice and do not invent facts. '
+            'Issue:\n' + issue
         )
 
     @staticmethod
     def generate_report(issue: str) -> str:
         return (
-            'You are a compliance report writer. Generate a structured audit issue report with the following sections: problem summary, root cause analysis, risk level, recommended remediation, and verification steps. '
-            'Keep the report professional, clear, and suitable for a stakeholder review. '
+            'You are Tool-125, a compliance report writer preparing a stakeholder-ready audit issue report. '
+            'Use only the issue provided and avoid unsupported assumptions. '
+            'Return exactly these sections:\n'
+            'Problem Summary:\n'
+            'Root Cause Analysis:\n'
+            'Risk Level:\n'
+            'Recommended Remediation:\n'
+            'Verification Steps:\n'
+            'Evidence to Retain:\n'
+            'Each section must be concrete, security-relevant, and suitable for audit closure review. '
             'Issue:\n' + issue
         )
 

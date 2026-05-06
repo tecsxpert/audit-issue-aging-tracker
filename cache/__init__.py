@@ -1,1 +1,1 @@
-"""Cache package for Redis-backed services.""
+"""Cache package for Redis-backed services."""

@@ -50,7 +50,7 @@ class PromptOptimizer:
     ]
 
     INJECTION_PATTERNS = re.compile(
-        r'(?i)(ignore previous instructions|ignore above instructions|do not follow|bypass|prompt injection|disregard this message)'
+        r'(?i)(ignore previous instructions|ignore above instructions|do not follow|system prompt|bypass|prompt injection|disregard this message)'
     )
 
     def score(self, output: str) -> int:

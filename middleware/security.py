@@ -9,6 +9,7 @@ from werkzeug.exceptions import RequestEntityTooLarge
 from services.jwt_manager import JwtValidationError, validate_jwt
 from services.pii_detector import contains_pii
 from services.sql_safety import contains_sql_injection
+from routes.ai_routes import utc_timestamp
 
 SECURE_HEADERS: dict[str, str] = {
     'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
@@ -34,21 +35,21 @@ def attach_security_middleware(app: Flask, config: Any) -> None:
     @app.errorhandler(SecurityError)
     def handle_security(error: SecurityError):
         current_app.logger.warning('Security validation failed', extra={'error': str(error)})
-        return jsonify({'status': 'error', 'message': str(error)}), 400
+        return jsonify(_error_payload(str(error))), 400
 
     @app.errorhandler(JwtValidationError)
     def handle_jwt(error: JwtValidationError):
         current_app.logger.warning('JWT validation failed', extra={'error': str(error)})
-        return jsonify({'status': 'error', 'message': str(error)}), 401
+        return jsonify(_error_payload(str(error))), 401
 
     @app.errorhandler(RequestEntityTooLarge)
     def handle_request_too_large(error: RequestEntityTooLarge):
-        return jsonify({'status': 'error', 'message': 'Request body too large.'}), 413
+        return jsonify(_error_payload('Request body too large.')), 413
 
     @app.errorhandler(RequestTimeoutError)
     def handle_timeout(error: RequestTimeoutError):
         current_app.logger.error('Request timeout triggered', exc_info=error)
-        return jsonify({'status': 'error', 'message': 'Request processing timed out.'}), 504
+        return jsonify(_error_payload('Request processing timed out.')), 504
 
     def _set_timeout(seconds: int) -> None:
         if hasattr(signal, 'SIGALRM'):
@@ -97,6 +98,7 @@ def attach_security_middleware(app: Flask, config: Any) -> None:
                         'payload_snippet': body_text[:160],
                     },
                 )
+                raise SecurityError('SQL injection payload detected and rejected.')
 
     @app.after_request
     def add_security_headers(response: Any) -> Any:
@@ -121,3 +123,12 @@ def attach_security_middleware(app: Flask, config: Any) -> None:
                 )
         _clear_timeout()
         return response
+
+
+def _error_payload(message: str) -> dict[str, object]:
+    return {
+        'success': False,
+        'status': 'error',
+        'message': message,
+        'generated_at': utc_timestamp(),
+    }

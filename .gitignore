@@ -1,5 +1,8 @@
 .env
 __pycache__/
 *.pyc
+.coverage
+coverage.xml
+htmlcov/
 node_modules/
 venv/

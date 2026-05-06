@@ -37,7 +37,7 @@ def test_rejects_prompt_injection_attempts(client) -> None:
     assert 'Prompt injection detected' in response.get_json()['message']
 
 
-def test_allows_sql_injection_content_as_issue_description(client, monkeypatch) -> None:
+def test_rejects_sql_injection_content(client, monkeypatch) -> None:
     monkeypatch.setattr('services.groq_client.GroqClient.generate', lambda self, prompt: 'SQL audit response')
     token = create_test_token()
     headers = {'Authorization': f'Bearer {token}'}
@@ -46,5 +46,5 @@ def test_allows_sql_injection_content_as_issue_description(client, monkeypatch) 
         json={'issue': 'Detected SQL injection via UNION SELECT and OR 1=1 in the login form.'},
         headers=headers,
     )
-    assert response.status_code == 200
-    assert response.get_json()['response'] == 'SQL audit response'
+    assert response.status_code == 400
+    assert 'SQL injection payload detected' in response.get_json()['message']

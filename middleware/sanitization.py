@@ -2,12 +2,14 @@ from __future__ import annotations
 import re
 from typing import Any
 from flask import Flask, jsonify, request
+from werkzeug.exceptions import RequestEntityTooLarge
 from services.pii_detector import contains_pii
+from routes.ai_routes import utc_timestamp
 
 SCRIPT_TAG_PATTERN = re.compile(r'(?is)<script.*?>.*?</script>')
 HTML_TAG_PATTERN = re.compile(r'(?is)<[^>]+>')
 PROMPT_INJECTION_PATTERN = re.compile(
-    r'(?i)(ignore previous instructions|ignore above instructions|do not follow instructions|bypass|prompt injection|disregard this message)'
+    r'(?i)(ignore previous instructions|ignore above instructions|do not follow(?:\s+\w+){0,4}\s+instructions?|do not follow(?:\s+the)?\s+system\s+prompt|bypass|prompt injection|disregard this message)'
 )
 
 
@@ -18,7 +20,12 @@ class SanitizationError(ValueError):
 def attach_sanitization_middleware(app: Flask) -> None:
     @app.errorhandler(SanitizationError)
     def handle_sanitization(error: SanitizationError):
-        return jsonify({'status': 'error', 'message': str(error)}), 400
+        return jsonify({
+            'success': False,
+            'status': 'error',
+            'message': str(error),
+            'generated_at': utc_timestamp(),
+        }), 400
 
     @app.before_request
     def sanitize_request() -> None:
@@ -30,7 +37,7 @@ def attach_sanitization_middleware(app: Flask) -> None:
         if not content_type.startswith('application/json'):
             raise SanitizationError('Content-Type must be application/json.')
         if request.content_length is not None and request.content_length > app.config['MAX_CONTENT_LENGTH']:
-            raise SanitizationError('Payload exceeds maximum allowed size.')
+            raise RequestEntityTooLarge()
         data = request.get_json(silent=False)
         sanitized = _sanitize_payload(data)
         request._cached_json = {False: sanitized, True: sanitized}

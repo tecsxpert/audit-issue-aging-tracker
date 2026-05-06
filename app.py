@@ -16,6 +16,7 @@ from middleware.sanitization import attach_sanitization_middleware
 from middleware.security import attach_security_middleware
 from routes.ai_routes import ai_blueprint
 from routes.health_routes import health_blueprint
+from security.secure_logging import attach_sensitive_data_filter, safe_extra
 
 
 def create_app() -> Flask:
@@ -48,6 +49,7 @@ def _configure_logging(app: Flask) -> None:
         '%(asctime)s %(levelname)s %(name)s %(message)s %(request_id)s'
     )
     handler.setFormatter(formatter)
+    attach_sensitive_data_filter(handler)
 
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)
@@ -57,7 +59,7 @@ def _configure_logging(app: Flask) -> None:
     app.logger.setLevel(logging.INFO)
     app.logger.info(
         'Application logging configured',
-        extra={'request_id': os.getenv('REQUEST_ID', 'local')},
+        extra=safe_extra(request_id=os.getenv('REQUEST_ID', 'local')),
     )
 
 

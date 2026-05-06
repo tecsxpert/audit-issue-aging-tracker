@@ -8,6 +8,7 @@ from flask import Flask, current_app, jsonify, request
 from werkzeug.exceptions import RequestEntityTooLarge
 from services.jwt_manager import JwtValidationError, validate_jwt
 from services.pii_detector import contains_pii
+from services.sensitive_scanner import mask_sensitive_text
 from services.sql_safety import contains_sql_injection
 from routes.ai_routes import utc_timestamp
 
@@ -95,7 +96,7 @@ def attach_security_middleware(app: Flask, config: Any) -> None:
                     extra={
                         'path': request.path,
                         'client_ip': request.remote_addr,
-                        'payload_snippet': body_text[:160],
+                        'payload_snippet': mask_sensitive_text(body_text[:160]),
                     },
                 )
                 raise SecurityError('SQL injection payload detected and rejected.')

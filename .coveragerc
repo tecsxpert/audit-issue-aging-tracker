@@ -6,6 +6,8 @@ omit =
     */test_*.py
     */conftest.py
     app.py
+    security/final_security_check.py
+    security/stress_test.py
     __pycache__/*
 
 [report]

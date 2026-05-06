@@ -11,6 +11,13 @@ HTML_TAG_PATTERN = re.compile(r'(?is)<[^>]+>')
 PROMPT_INJECTION_PATTERN = re.compile(
     r'(?i)(ignore previous instructions|ignore above instructions|do not follow(?:\s+\w+){0,4}\s+instructions?|do not follow(?:\s+the)?\s+system\s+prompt|bypass|prompt injection|disregard this message)'
 )
+COMMAND_INJECTION_PATTERN = re.compile(
+    r'(?is)(\b(?:curl|wget|nc|netcat|bash|sh|powershell|cmd\.exe|python\s+-c)\b|[`$]\(|\|\||&&|;\s*(?:rm|del|curl|wget|bash|sh|powershell)\b)'
+)
+DANGEROUS_KEY_PATTERN = re.compile(r'(?i)^(__proto__|constructor|prototype|\$where|\$ne|\$gt|\$regex|\$function)$')
+MAX_JSON_DEPTH = 8
+MAX_LIST_ITEMS = 100
+MAX_STRING_LENGTH = 12_000
 
 
 class SanitizationError(ValueError):
@@ -43,16 +50,29 @@ def attach_sanitization_middleware(app: Flask) -> None:
         request._cached_json = {False: sanitized, True: sanitized}
 
 
-def _sanitize_payload(payload: Any) -> Any:
+def _sanitize_payload(payload: Any, depth: int = 0) -> Any:
+    if depth > MAX_JSON_DEPTH:
+        raise SanitizationError('JSON payload exceeds maximum nesting depth.')
     if isinstance(payload, dict):
-        return {key: _sanitize_payload(value) for key, value in payload.items()}
+        sanitized: dict[str, Any] = {}
+        for key, value in payload.items():
+            if not isinstance(key, str) or DANGEROUS_KEY_PATTERN.search(key):
+                raise SanitizationError('Dangerous JSON key detected and rejected.')
+            sanitized[key] = _sanitize_payload(value, depth + 1)
+        return sanitized
     if isinstance(payload, list):
-        return [_sanitize_payload(item) for item in payload]
+        if len(payload) > MAX_LIST_ITEMS:
+            raise SanitizationError('JSON array exceeds maximum item count.')
+        return [_sanitize_payload(item, depth + 1) for item in payload]
     if isinstance(payload, str):
+        if len(payload) > MAX_STRING_LENGTH:
+            raise SanitizationError('Input field exceeds maximum allowed length.')
         if SCRIPT_TAG_PATTERN.search(payload):
             raise SanitizationError('Script tags are not allowed in input.')
         if PROMPT_INJECTION_PATTERN.search(payload):
             raise SanitizationError('Prompt injection detected and rejected.')
+        if COMMAND_INJECTION_PATTERN.search(payload):
+            raise SanitizationError('Command injection payload detected and rejected.')
         if contains_pii(payload):
             raise SanitizationError('Sensitive personal information detected in input.')
         if HTML_TAG_PATTERN.search(payload):

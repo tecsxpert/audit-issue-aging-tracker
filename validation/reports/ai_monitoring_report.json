@@ -3,8 +3,8 @@
     {
       "endpoint": "/describe",
       "iteration": 1,
-      "latency_ms": 12.01,
-      "response_length": 1577,
+      "latency_ms": 10.31,
+      "response_length": 1777,
       "score": 10,
       "status_code": 200,
       "success": true
@@ -12,8 +12,8 @@
     {
       "endpoint": "/recommend",
       "iteration": 1,
-      "latency_ms": 11.56,
-      "response_length": 1105,
+      "latency_ms": 11.41,
+      "response_length": 1269,
       "score": 10,
       "status_code": 200,
       "success": true
@@ -21,45 +21,18 @@
     {
       "endpoint": "/generate-report",
       "iteration": 1,
-      "latency_ms": 38.64,
-      "response_length": 1721,
-      "score": 10,
-      "status_code": 200,
-      "success": true
-    },
-    {
-      "endpoint": "/describe",
-      "iteration": 2,
-      "latency_ms": 76.24,
-      "response_length": 1565,
-      "score": 10,
-      "status_code": 200,
-      "success": true
-    },
-    {
-      "endpoint": "/recommend",
-      "iteration": 2,
-      "latency_ms": 9.72,
-      "response_length": 1256,
-      "score": 10,
-      "status_code": 200,
-      "success": true
-    },
-    {
-      "endpoint": "/generate-report",
-      "iteration": 2,
-      "latency_ms": 12.22,
-      "response_length": 2205,
+      "latency_ms": 10.99,
+      "response_length": 1875,
       "score": 10,
       "status_code": 200,
       "success": true
     }
   ],
   "summary": {
-    "average_latency_ms": 26.73,
+    "average_latency_ms": 10.9,
     "failure_count": 0,
-    "p95_latency_ms": 38.64,
-    "redis_ai_cache_keys": "unavailable",
-    "sample_count": 6
+    "p95_latency_ms": 10.99,
+    "redis_ai_cache_keys": 6,
+    "sample_count": 3
   }
 }

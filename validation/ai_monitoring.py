@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import statistics
 from pathlib import Path
+from urllib.parse import urlparse, urlunparse
 
 from cache.redis_client import create_redis_client
 from validation.common import (
@@ -64,14 +65,26 @@ def monitor_ai_integrations(iterations: int = 3) -> None:
 def _count_cache_keys(redis_url: str) -> int | str:
     if not redis_url:
         return 'not_configured'
-    try:
-        client = create_redis_client(redis_url)
-        if client is None:
-            return 'not_configured'
-        return len(list(client.scan_iter(match='tool125:ai-cache:*', count=100)))
-    except Exception as exc:
-        log('redis_cache_monitoring_unavailable', error=str(exc))
-        return 'unavailable'
+    for candidate in _redis_url_candidates(redis_url):
+        try:
+            client = create_redis_client(candidate)
+            if client is None:
+                continue
+            return len(list(client.scan_iter(match='tool125:ai-cache:*', count=100)))
+        except Exception as exc:
+            log('redis_cache_monitoring_unavailable', redis_url=candidate, error=str(exc))
+    return 'unavailable'
+
+
+def _redis_url_candidates(redis_url: str) -> list[str]:
+    candidates = [redis_url]
+    parsed = urlparse(redis_url)
+    if parsed.hostname not in {'127.0.0.1', 'localhost'}:
+        host_port = '127.0.0.1'
+        if parsed.port:
+            host_port = f'{host_port}:{parsed.port}'
+        candidates.append(urlunparse(parsed._replace(netloc=host_port)))
+    return candidates
 
 
 if __name__ == '__main__':

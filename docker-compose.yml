@@ -1,0 +1,90 @@
+services:
+  ai-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tool-125-ai-service:day11
+    container_name: tool-125-ai-service
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_API_BASE_URL: ${GROQ_API_BASE_URL:-https://api.groq.com/openai/v1}
+      GROQ_MODEL: ${GROQ_MODEL:-llama-3.3-70b-versatile}
+      JWT_AUTH_ENABLED: ${JWT_AUTH_ENABLED:-true}
+      JWT_SECRET: ${JWT_SECRET:-}
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-tool-125}
+      JWT_ISSUER: ${JWT_ISSUER:-tool-125-auth}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost,http://127.0.0.1}
+      REQUEST_TIMEOUT_SECONDS: ${REQUEST_TIMEOUT_SECONDS:-10}
+      REDIS_URL: redis://redis:6379/0
+      RATE_LIMIT_STORAGE_URI: redis://redis:6379/1
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_DB:-tool125}
+      POSTGRES_USER: ${POSTGRES_USER:-tool125}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tool125_dev_password}
+      PORT: "8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - tool125-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: tool-125-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - tool125-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: tool-125-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-tool125}
+      POSTGRES_USER: ${POSTGRES_USER:-tool125}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tool125_dev_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-tool125} -d ${POSTGRES_DB:-tool125}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tool125-network
+
+volumes:
+  redis-data:
+  postgres-data:
+
+networks:
+  tool125-network:
+    driver: bridge

@@ -1,152 +1,159 @@
+from __future__ import annotations
+
 import json
+import logging
+import hashlib
 import os
-import re
 import time
+from typing import Any
+
 import requests
-from dotenv import load_dotenv
+from requests import Response
 
-# Load .env from root
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
+from cache.redis_client import create_redis_client
 
-API_KEY = os.getenv("GROQ_API_KEY")
+
+class GroqClientError(Exception):
+    """Raised when the Groq API cannot produce a usable response."""
+
 
 class GroqClient:
+    def __init__(
+        self,
+        api_key: str,
+        base_url: str,
+        model: str,
+        logger: logging.Logger | None = None,
+    ) -> None:
+        if not api_key:
+            raise ValueError('GROQ_API_KEY must be configured in environment variables.')
+        self.api_key = api_key
+        self.base_url = base_url.rstrip('/')
+        self.model = model
+        self.session = requests.Session()
+        self.session.headers.update({
+            'Authorization': f'Bearer {self.api_key}',
+            'Content-Type': 'application/json',
+        })
+        self.logger = logger or logging.getLogger(__name__)
+        self.cache_ttl_seconds = int(os.getenv('AI_CACHE_TTL_SECONDS', '900'))
+        self.cache = create_redis_client()
 
-    def __init__(self):
-        self.url = "https://api.groq.com/openai/v1/chat/completions"
-        self.headers = {
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json"
-        }
-
-    def generate_response(self, prompt):
-        data = {
-            "model": "llama-3.3-70b-versatile",
-            "messages": [
-                {"role": "user", "content": prompt}
-            ],
-            "temperature": 0.3
-        }
-
-        retries = 3
-        backoff = 2  # seconds
-
-        for attempt in range(retries):
-            try:
-                response = requests.post(self.url, headers=self.headers, json=data)
-
-                if response.status_code == 200:
-                    result = response.json()
-                    return result["choices"][0]["message"]["content"]
-
-                else:
-                    print(f"❌ API Error {response.status_code}: {response.text}")
-
-            except Exception as e:
-                print(f"❌ Exception on attempt {attempt+1}: {str(e)}")
-
-            # retry delay
-            time.sleep(backoff * (attempt + 1))
-
-        # fallback response
-        return "AI service temporarily unavailable. Please try again later."
-
-    def generate_recommendations(self, issue):
-        prompt = f"""
-You are a professional audit expert.
-
-Provide exactly 3 actionable recommendations for the given audit issue.
-
-Make responses:
-- Specific to auditing context
-- Practical and implementable
-
-STRICT RULES:
-- Return ONLY JSON
-- High, Medium, Low priority (in order)
-- Each description max 1 line
-
-Format:
-[
-  {{"action_type":"Fix","description":"","priority":"High"}},
-  {{"action_type":"Improve","description":"","priority":"Medium"}},
-  {{"action_type":"Monitor","description":"","priority":"Low"}}
-]
-
-Audit Issue:
-{issue}
-"""
-
+    def generate(self, prompt: str, max_tokens: int = 1024) -> str:
+        if not isinstance(prompt, str) or not prompt.strip():
+            raise ValueError('Prompt cannot be empty.')
         payload = {
-            "model": "llama-3.3-70b-versatile",
-            "messages": [
-                {"role": "user", "content": prompt}
+            'model': self.model,
+            'messages': [
+                {
+                    'role': 'system',
+                    'content': (
+                        'You are an audit issue aging analyst. Return clear, concise, '
+                        'actionable risk and remediation guidance.'
+                    ),
+                },
+                {'role': 'user', 'content': prompt},
             ],
-            "temperature": 0.3
+            'temperature': 0.2,
+            'max_tokens': max_tokens,
         }
+        cache_key = self._cache_key(payload)
+        cached = self._cache_get(cache_key)
+        if cached:
+            self.logger.info('Groq response served from Redis cache', extra={'cache_key': cache_key})
+            return cached
 
-        def make_default_recommendations():
-            return [
-                {
-                    "action_type": "Fix",
-                    "description": "Review the issue and apply an immediate correction to control processes.",
-                    "priority": "High"
-                },
-                {
-                    "action_type": "Improve",
-                    "description": "Update the audit workflow to prevent this type of issue in the future.",
-                    "priority": "Medium"
-                },
-                {
-                    "action_type": "Monitor",
-                    "description": "Track the implemented changes and verify they remain effective.",
-                    "priority": "Low"
-                }
-            ]
+        response_text = self._call_groq(payload)
+        self._cache_set(cache_key, response_text)
+        return response_text
 
-        def extract_json_array(text):
-            match = re.search(r"\[.*\]", text, re.DOTALL)
-            if not match:
-                return None
-            try:
-                parsed = json.loads(match.group(0))
-                if isinstance(parsed, list) and len(parsed) == 3:
-                    return parsed
-            except json.JSONDecodeError as e:
-                print(f"❌ JSON parse error: {e}")
-            return None
-
+    def _call_groq(self, payload: dict[str, Any]) -> str:
         retries = 3
-        timeout = 10
-        backoff = 2
+        backoff = 1.0
+        last_error: Exception | None = None
 
         for attempt in range(1, retries + 1):
             try:
-                response = requests.post(
-                    self.url,
-                    headers=self.headers,
-                    json=payload,
-                    timeout=timeout
+                self.logger.info('Sending request to Groq API', extra={'attempt': attempt})
+                response = self.session.post(f'{self.base_url}/chat/completions', json=payload, timeout=10)
+                self._assert_response(response)
+                return self._parse_response(response)
+            except (requests.RequestException, ConnectionError, GroqClientError, ValueError) as exc:
+                last_error = exc
+                self.logger.warning(
+                    'Groq request failed',
+                    extra={'attempt': attempt, 'error': str(exc)},
                 )
+                if attempt < retries:
+                    time.sleep(backoff)
+                    backoff *= 2
 
-                if response.status_code != 200:
-                    print(f"❌ API Error {response.status_code} on attempt {attempt}: {response.text}")
-                else:
-                    choice_text = response.text
-                    parsed = extract_json_array(choice_text)
-                    if parsed is not None:
-                        return parsed
-                    print("❌ Failed to extract a valid JSON recommendation array from API response.")
+        raise GroqClientError(f'Groq API failed after {retries} attempts: {last_error}')
 
-            except requests.RequestException as e:
-                print(f"❌ Request exception on attempt {attempt}: {e}")
-            except Exception as e:
-                print(f"❌ Unexpected error on attempt {attempt}: {e}")
+    def _cache_key(self, payload: dict[str, Any]) -> str:
+        raw = json.dumps(payload, sort_keys=True, separators=(',', ':'))
+        digest = hashlib.sha256(raw.encode('utf-8')).hexdigest()
+        return f'tool125:ai-cache:{self.model}:{digest}'
 
-            if attempt < retries:
-                sleep_time = backoff * attempt
-                print(f"⏳ Retrying in {sleep_time} seconds...")
-                time.sleep(sleep_time)
+    def _cache_get(self, key: str) -> str | None:
+        if self.cache is None:
+            return None
+        try:
+            cached = self.cache.get(key)
+        except Exception as exc:  # pragma: no cover - depends on runtime Redis availability
+            self.logger.warning('Redis AI cache read failed', extra={'error': str(exc)})
+            return None
+        return cached if isinstance(cached, str) and cached.strip() else None
 
-        print("⚠️ All retries exhausted. Returning fallback recommendations.")
-        return make_default_recommendations()
+    def _cache_set(self, key: str, value: str) -> None:
+        if self.cache is None or not value:
+            return
+        try:
+            self.cache.setex(key, self.cache_ttl_seconds, value)
+        except Exception as exc:  # pragma: no cover - depends on runtime Redis availability
+            self.logger.warning('Redis AI cache write failed', extra={'error': str(exc)})
+
+    def _assert_response(self, response: Response) -> None:
+        if response.status_code >= 400:
+            raise GroqClientError(
+                f'Groq API returned HTTP {response.status_code}: {response.text}'
+            )
+
+    def _parse_response(self, response: Response) -> str:
+        raw_json = response.json()
+        self.logger.info('Groq response received', extra={'response_keys': list(raw_json.keys())})
+
+        output = raw_json.get('output')
+        if output is None and 'choices' in raw_json:
+            choices = raw_json['choices']
+            if isinstance(choices, list) and choices:
+                first_choice = choices[0]
+                if isinstance(first_choice, dict):
+                    message = first_choice.get('message')
+                    if isinstance(message, dict):
+                        output = message.get('content')
+                    output = output or first_choice.get('text')
+        if output is None and 'outputs' in raw_json:
+            outputs = raw_json['outputs']
+            if isinstance(outputs, list) and outputs:
+                output = outputs[0]
+        if output is None:
+            raise GroqClientError('Groq API response did not contain a valid output.')
+        if isinstance(output, (dict, list)):
+            return json.dumps(output, ensure_ascii=False)
+        if isinstance(output, str):
+            parsed = self._safe_parse_json_string(output)
+            if not parsed.strip():
+                raise GroqClientError('Groq API returned an empty output.')
+            return parsed
+        raise GroqClientError('Groq API returned an unsupported output type.')
+
+    def _safe_parse_json_string(self, output: str) -> str:
+        trimmed = output.strip()
+        if trimmed.startswith('{') or trimmed.startswith('['):
+            try:
+                parsed = json.loads(trimmed)
+                return json.dumps(parsed, ensure_ascii=False)
+            except json.JSONDecodeError:
+                return output
+        return output

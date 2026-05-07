@@ -1,0 +1,43 @@
+{
+  "service": "Tool-125 Audit Issue Aging Tracker AI Service",
+  "checks": [
+    {
+      "name": "Application health",
+      "endpoint": "GET /health",
+      "expected_status": 200,
+      "owner": "AI Developer 2"
+    },
+    {
+      "name": "Describe AI endpoint",
+      "endpoint": "POST /describe",
+      "expected_status": 200,
+      "requires": ["JWT", "Groq API", "Redis rate limit", "Redis AI cache"]
+    },
+    {
+      "name": "Recommend AI endpoint",
+      "endpoint": "POST /recommend",
+      "expected_status": 200,
+      "requires": ["JWT", "Groq API", "Redis rate limit", "Redis AI cache"]
+    },
+    {
+      "name": "Generate report AI endpoint",
+      "endpoint": "POST /generate-report",
+      "expected_status": 200,
+      "requires": ["JWT", "Groq API", "Redis rate limit", "Redis AI cache"]
+    },
+    {
+      "name": "Redis",
+      "command": "redis-cli ping",
+      "expected": "PONG"
+    },
+    {
+      "name": "PostgreSQL",
+      "command": "pg_isready",
+      "expected": "accepting connections"
+    }
+  ],
+  "latency_targets_ms": {
+    "health": 500,
+    "ai_p95": 15000
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "version": "v2.0-quality-reviewed",
+  "target_average_score": 4.0,
+  "prompts": {
+    "/describe": {
+      "format": ["Summary", "Why It Matters", "Likely Impact", "Immediate Review Steps"],
+      "improvements": ["grounded-only instruction", "fixed sections", "explicit security and compliance audience", "actionable review steps"]
+    },
+    "/recommend": {
+      "format": ["Priority", "Owner", "Action", "Validation"],
+      "improvements": ["exact five bullets", "owner assignment", "evidence validation", "monitoring and recurrence prevention"]
+    },
+    "/generate-report": {
+      "format": ["Problem Summary", "Root Cause Analysis", "Risk Level", "Recommended Remediation", "Verification Steps", "Evidence to Retain"],
+      "improvements": ["stakeholder-ready structure", "hallucination prevention", "audit closure evidence", "verification completeness"]
+    }
+  }
+}

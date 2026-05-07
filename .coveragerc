@@ -1,0 +1,24 @@
+[run]
+branch = True
+source = .
+omit =
+    */tests/*
+    */test_*.py
+    */conftest.py
+    app.py
+    quality/ai_quality_review.py
+    security/final_security_check.py
+    security/stress_test.py
+    __pycache__/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    pass
+precision = 2
+skip_covered = False

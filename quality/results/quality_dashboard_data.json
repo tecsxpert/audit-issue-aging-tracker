@@ -1,0 +1,666 @@
+{
+  "summary": {
+    "overall": {
+      "average": 4.93,
+      "passed": true,
+      "count": 30,
+      "categories": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 4.67,
+        "actionability": 5,
+        "security_relevance": 5
+      }
+    },
+    "endpoints": {
+      "/describe": {
+        "average": 4.8,
+        "passed": true,
+        "count": 10,
+        "categories": {
+          "accuracy": 5,
+          "clarity": 5,
+          "structure": 4,
+          "actionability": 5,
+          "security_relevance": 5
+        },
+        "schema_error_count": 0,
+        "fallback_count": 0,
+        "average_latency_ms": 0.0
+      },
+      "/recommend": {
+        "average": 5,
+        "passed": true,
+        "count": 10,
+        "categories": {
+          "accuracy": 5,
+          "clarity": 5,
+          "structure": 5,
+          "actionability": 5,
+          "security_relevance": 5
+        },
+        "schema_error_count": 0,
+        "fallback_count": 0,
+        "average_latency_ms": 0.0
+      },
+      "/generate-report": {
+        "average": 5,
+        "passed": true,
+        "count": 10,
+        "categories": {
+          "accuracy": 5,
+          "clarity": 5,
+          "structure": 5,
+          "actionability": 5,
+          "security_relevance": 5
+        },
+        "schema_error_count": 0,
+        "fallback_count": 0,
+        "average_latency_ms": 0.0
+      }
+    },
+    "result_count": 30
+  },
+  "results": [
+    {
+      "case_id": "DES-001",
+      "endpoint": "/describe",
+      "severity": "critical",
+      "category": "access control",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 4,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Summary: The audit issue states that Quarterly access review found five terminated contractors still assigned privileged database roles in the finance reporting environment. This creates a security and compliance risk because the control may fail without timely remediation, evidence, and validation. Impact: reviewers should treat the finding as actionable, confirm affected systems, document root cause, and verify whether access, backup, policy, or vulnerability controls are operating as designed. Recommended next step: assign an owner, collect evidence, update the control, and monitor remediation until audit closure.",
+      "score_average": 4.8,
+      "passed": true
+    },
+    {
+      "case_id": "DES-002",
+      "endpoint": "/describe",
+      "severity": "high",
+      "category": "compliance violation",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 4,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Summary: The audit issue states that SOX evidence for production change approvals is missing for emergency patches deployed during the last close period. This creates a security and compliance risk because the control may fail without timely remediation, evidence, and validation. Impact: reviewers should treat the finding as actionable, confirm affected systems, document root cause, and verify whether access, backup, policy, or vulnerability controls are operating as designed. Recommended next step: assign an owner, collect evidence, update the control, and monitor remediation until audit closure.",
+      "score_average": 4.8,
+      "passed": true
+    },
+    {
+      "case_id": "DES-003",
+      "endpoint": "/describe",
+      "severity": "high",
+      "category": "outdated software",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 4,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Summary: The audit issue states that A public-facing Ubuntu server is running an unsupported OpenSSL package with known high severity vulnerabilities. This creates a security and compliance risk because the control may fail without timely remediation, evidence, and validation. Impact: reviewers should treat the finding as actionable, confirm affected systems, document root cause, and verify whether access, backup, policy, or vulnerability controls are operating as designed. Recommended next step: assign an owner, collect evidence, update the control, and monitor remediation until audit closure.",
+      "score_average": 4.8,
+      "passed": true
+    },
+    {
+      "case_id": "DES-004",
+      "endpoint": "/describe",
+      "severity": "medium",
+      "category": "missing documentation",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 4,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Summary: The audit issue states that The incident response runbook does not define escalation contacts, evidence retention steps, or post-incident review ownership. This creates a security and compliance risk because the control may fail without timely remediation, evidence, and validation. Impact: reviewers should treat the finding as actionable, confirm affected systems, document root cause, and verify whether access, backup, policy, or vulnerability controls are operating as designed. Recommended next step: assign an owner, collect evidence, update the control, and monitor remediation until audit closure.",
+      "score_average": 4.8,
+      "passed": true
+    },
+    {
+      "case_id": "DES-005",
+      "endpoint": "/describe",
+      "severity": "critical",
+      "category": "security incident",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 4,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Summary: The audit issue states that Security monitoring detected repeated failed administrator login attempts followed by a successful login from an unrecognized country. This creates a security and compliance risk because the control may fail without timely remediation, evidence, and validation. Impact: reviewers should treat the finding as actionable, confirm affected systems, document root cause, and verify whether access, backup, policy, or vulnerability controls are operating as designed. Recommended next step: assign an owner, collect evidence, update the control, and monitor remediation until audit closure.",
+      "score_average": 4.8,
+      "passed": true
+    },
+    {
+      "case_id": "DES-006",
+      "endpoint": "/describe",
+      "severity": "high",
+      "category": "data leakage risk",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 4,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Summary: The audit issue states that Audit logs show customer export files stored in a shared object bucket without encryption or lifecycle retention rules. This creates a security and compliance risk because the control may fail without timely remediation, evidence, and validation. Impact: reviewers should treat the finding as actionable, confirm affected systems, document root cause, and verify whether access, backup, policy, or vulnerability controls are operating as designed. Recommended next step: assign an owner, collect evidence, update the control, and monitor remediation until audit closure.",
+      "score_average": 4.8,
+      "passed": true
+    },
+    {
+      "case_id": "DES-007",
+      "endpoint": "/describe",
+      "severity": "high",
+      "category": "backup failure",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 4,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Summary: The audit issue states that Nightly database backups for the ticketing platform have failed for six consecutive days without alert acknowledgement. This creates a security and compliance risk because the control may fail without timely remediation, evidence, and validation. Impact: reviewers should treat the finding as actionable, confirm affected systems, document root cause, and verify whether access, backup, policy, or vulnerability controls are operating as designed. Recommended next step: assign an owner, collect evidence, update the control, and monitor remediation until audit closure.",
+      "score_average": 4.8,
+      "passed": true
+    },
+    {
+      "case_id": "DES-008",
+      "endpoint": "/describe",
+      "severity": "medium",
+      "category": "infrastructure vulnerability",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 4,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Summary: The audit issue states that Network scan identified internal management ports exposed to the corporate user VLAN without firewall restrictions. This creates a security and compliance risk because the control may fail without timely remediation, evidence, and validation. Impact: reviewers should treat the finding as actionable, confirm affected systems, document root cause, and verify whether access, backup, policy, or vulnerability controls are operating as designed. Recommended next step: assign an owner, collect evidence, update the control, and monitor remediation until audit closure.",
+      "score_average": 4.8,
+      "passed": true
+    },
+    {
+      "case_id": "DES-009",
+      "endpoint": "/describe",
+      "severity": "medium",
+      "category": "policy violation",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 4,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Summary: The audit issue states that Developers are using shared local administrator credentials on build servers contrary to privileged access policy. This creates a security and compliance risk because the control may fail without timely remediation, evidence, and validation. Impact: reviewers should treat the finding as actionable, confirm affected systems, document root cause, and verify whether access, backup, policy, or vulnerability controls are operating as designed. Recommended next step: assign an owner, collect evidence, update the control, and monitor remediation until audit closure.",
+      "score_average": 4.8,
+      "passed": true
+    },
+    {
+      "case_id": "DES-010",
+      "endpoint": "/describe",
+      "severity": "medium",
+      "category": "configuration weakness",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 4,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Summary: The audit issue states that The password reset workflow does not enforce multi-factor verification for high-risk account recovery requests. This creates a security and compliance risk because the control may fail without timely remediation, evidence, and validation. Impact: reviewers should treat the finding as actionable, confirm affected systems, document root cause, and verify whether access, backup, policy, or vulnerability controls are operating as designed. Recommended next step: assign an owner, collect evidence, update the control, and monitor remediation until audit closure.",
+      "score_average": 4.8,
+      "passed": true
+    },
+    {
+      "case_id": "REC-001",
+      "endpoint": "/recommend",
+      "severity": "high",
+      "category": "access control",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "- Priority: High | Owner: Security | Action: Review and remediate the audit issue: Role mapping for the procurement application grants invoice approval rights to users who should only submit purchase requests. | Validation: confirm the affected control with audit evidence.\n- Priority: High | Owner: Engineering | Action: Implement the corrective control and update configuration or workflow safeguards | Validation: test the fix in the affected environment.\n- Priority: Medium | Owner: Compliance | Action: Update documentation, owner records, and closure criteria | Validation: attach policy or control evidence to the audit record.\n- Priority: Medium | Owner: Operations | Action: Monitor recurrence indicators and alert on repeated control failure | Validation: review monitoring evidence after remediation.\n- Priority: Low | Owner: Compliance | Action: Verify closure metrics and retain evidence for the next review | Validation: complete audit sign-off.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REC-002",
+      "endpoint": "/recommend",
+      "severity": "medium",
+      "category": "compliance violation",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "- Priority: High | Owner: Security | Action: Review and remediate the audit issue: PCI control testing found that quarterly vulnerability scan exceptions were approved without documented business justification. | Validation: confirm the affected control with audit evidence.\n- Priority: High | Owner: Engineering | Action: Implement the corrective control and update configuration or workflow safeguards | Validation: test the fix in the affected environment.\n- Priority: Medium | Owner: Compliance | Action: Update documentation, owner records, and closure criteria | Validation: attach policy or control evidence to the audit record.\n- Priority: Medium | Owner: Operations | Action: Monitor recurrence indicators and alert on repeated control failure | Validation: review monitoring evidence after remediation.\n- Priority: Low | Owner: Compliance | Action: Verify closure metrics and retain evidence for the next review | Validation: complete audit sign-off.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REC-003",
+      "endpoint": "/recommend",
+      "severity": "critical",
+      "category": "outdated software",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "- Priority: High | Owner: Security | Action: Review and remediate the audit issue: The VPN gateway firmware is two major versions behind and lacks vendor fixes for active exploitation vulnerabilities. | Validation: confirm the affected control with audit evidence.\n- Priority: High | Owner: Engineering | Action: Implement the corrective control and update configuration or workflow safeguards | Validation: test the fix in the affected environment.\n- Priority: Medium | Owner: Compliance | Action: Update documentation, owner records, and closure criteria | Validation: attach policy or control evidence to the audit record.\n- Priority: Medium | Owner: Operations | Action: Monitor recurrence indicators and alert on repeated control failure | Validation: review monitoring evidence after remediation.\n- Priority: Low | Owner: Compliance | Action: Verify closure metrics and retain evidence for the next review | Validation: complete audit sign-off.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REC-004",
+      "endpoint": "/recommend",
+      "severity": "low",
+      "category": "missing documentation",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "- Priority: High | Owner: Security | Action: Review and remediate the audit issue: The data retention standard references retired storage systems and does not include ownership for archive deletion reviews. | Validation: confirm the affected control with audit evidence.\n- Priority: High | Owner: Engineering | Action: Implement the corrective control and update configuration or workflow safeguards | Validation: test the fix in the affected environment.\n- Priority: Medium | Owner: Compliance | Action: Update documentation, owner records, and closure criteria | Validation: attach policy or control evidence to the audit record.\n- Priority: Medium | Owner: Operations | Action: Monitor recurrence indicators and alert on repeated control failure | Validation: review monitoring evidence after remediation.\n- Priority: Low | Owner: Compliance | Action: Verify closure metrics and retain evidence for the next review | Validation: complete audit sign-off.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REC-005",
+      "endpoint": "/recommend",
+      "severity": "high",
+      "category": "security incident",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "- Priority: High | Owner: Security | Action: Review and remediate the audit issue: Endpoint protection quarantined malware on three laptops, but incident tickets do not show containment verification or lessons learned. | Validation: confirm the affected control with audit evidence.\n- Priority: High | Owner: Engineering | Action: Implement the corrective control and update configuration or workflow safeguards | Validation: test the fix in the affected environment.\n- Priority: Medium | Owner: Compliance | Action: Update documentation, owner records, and closure criteria | Validation: attach policy or control evidence to the audit record.\n- Priority: Medium | Owner: Operations | Action: Monitor recurrence indicators and alert on repeated control failure | Validation: review monitoring evidence after remediation.\n- Priority: Low | Owner: Compliance | Action: Verify closure metrics and retain evidence for the next review | Validation: complete audit sign-off.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REC-006",
+      "endpoint": "/recommend",
+      "severity": "critical",
+      "category": "data leakage risk",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "- Priority: High | Owner: Security | Action: Review and remediate the audit issue: A business intelligence dashboard exposes salary fields to the entire operations group instead of the approved HR audience. | Validation: confirm the affected control with audit evidence.\n- Priority: High | Owner: Engineering | Action: Implement the corrective control and update configuration or workflow safeguards | Validation: test the fix in the affected environment.\n- Priority: Medium | Owner: Compliance | Action: Update documentation, owner records, and closure criteria | Validation: attach policy or control evidence to the audit record.\n- Priority: Medium | Owner: Operations | Action: Monitor recurrence indicators and alert on repeated control failure | Validation: review monitoring evidence after remediation.\n- Priority: Low | Owner: Compliance | Action: Verify closure metrics and retain evidence for the next review | Validation: complete audit sign-off.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REC-007",
+      "endpoint": "/recommend",
+      "severity": "medium",
+      "category": "backup failure",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "- Priority: High | Owner: Security | Action: Review and remediate the audit issue: Restore testing for the document management database has not been completed during the current fiscal year. | Validation: confirm the affected control with audit evidence.\n- Priority: High | Owner: Engineering | Action: Implement the corrective control and update configuration or workflow safeguards | Validation: test the fix in the affected environment.\n- Priority: Medium | Owner: Compliance | Action: Update documentation, owner records, and closure criteria | Validation: attach policy or control evidence to the audit record.\n- Priority: Medium | Owner: Operations | Action: Monitor recurrence indicators and alert on repeated control failure | Validation: review monitoring evidence after remediation.\n- Priority: Low | Owner: Compliance | Action: Verify closure metrics and retain evidence for the next review | Validation: complete audit sign-off.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REC-008",
+      "endpoint": "/recommend",
+      "severity": "high",
+      "category": "infrastructure vulnerability",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "- Priority: High | Owner: Security | Action: Review and remediate the audit issue: Kubernetes nodes allow unrestricted outbound internet access from workloads that process regulated audit evidence. | Validation: confirm the affected control with audit evidence.\n- Priority: High | Owner: Engineering | Action: Implement the corrective control and update configuration or workflow safeguards | Validation: test the fix in the affected environment.\n- Priority: Medium | Owner: Compliance | Action: Update documentation, owner records, and closure criteria | Validation: attach policy or control evidence to the audit record.\n- Priority: Medium | Owner: Operations | Action: Monitor recurrence indicators and alert on repeated control failure | Validation: review monitoring evidence after remediation.\n- Priority: Low | Owner: Compliance | Action: Verify closure metrics and retain evidence for the next review | Validation: complete audit sign-off.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REC-009",
+      "endpoint": "/recommend",
+      "severity": "medium",
+      "category": "policy violation",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "- Priority: High | Owner: Security | Action: Review and remediate the audit issue: Production support staff are closing change tickets without attaching implementation evidence or peer review notes. | Validation: confirm the affected control with audit evidence.\n- Priority: High | Owner: Engineering | Action: Implement the corrective control and update configuration or workflow safeguards | Validation: test the fix in the affected environment.\n- Priority: Medium | Owner: Compliance | Action: Update documentation, owner records, and closure criteria | Validation: attach policy or control evidence to the audit record.\n- Priority: Medium | Owner: Operations | Action: Monitor recurrence indicators and alert on repeated control failure | Validation: review monitoring evidence after remediation.\n- Priority: Low | Owner: Compliance | Action: Verify closure metrics and retain evidence for the next review | Validation: complete audit sign-off.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REC-010",
+      "endpoint": "/recommend",
+      "severity": "high",
+      "category": "configuration weakness",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "- Priority: High | Owner: Security | Action: Review and remediate the audit issue: Cloud storage buckets used by audit exports do not enforce server-side encryption or public access blocking controls. | Validation: confirm the affected control with audit evidence.\n- Priority: High | Owner: Engineering | Action: Implement the corrective control and update configuration or workflow safeguards | Validation: test the fix in the affected environment.\n- Priority: Medium | Owner: Compliance | Action: Update documentation, owner records, and closure criteria | Validation: attach policy or control evidence to the audit record.\n- Priority: Medium | Owner: Operations | Action: Monitor recurrence indicators and alert on repeated control failure | Validation: review monitoring evidence after remediation.\n- Priority: Low | Owner: Compliance | Action: Verify closure metrics and retain evidence for the next review | Validation: complete audit sign-off.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REP-001",
+      "endpoint": "/generate-report",
+      "severity": "critical",
+      "category": "access control",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Problem Summary: The audit issue identifies that The identity provider synchronization job failed, leaving disabled users active in downstream SaaS applications for two weeks. and may weaken security, compliance, or operational control reliability.\nRoot Cause Analysis: Likely causes include missing ownership, outdated procedures, weak monitoring, or incomplete validation evidence.\nRisk Level: Severity should be based on exposure, affected assets, data sensitivity, and control failure impact.\nRecommended Remediation: Assign an owner, implement corrective controls, update documentation, test the fix, and monitor recurrence.\nVerification Steps: Review evidence, validate configuration, confirm control operation, and document audit closure.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REP-002",
+      "endpoint": "/generate-report",
+      "severity": "high",
+      "category": "compliance violation",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Problem Summary: The audit issue identifies that GDPR data subject deletion requests are not tracked to completion across analytics replicas and reporting marts. and may weaken security, compliance, or operational control reliability.\nRoot Cause Analysis: Likely causes include missing ownership, outdated procedures, weak monitoring, or incomplete validation evidence.\nRisk Level: Severity should be based on exposure, affected assets, data sensitivity, and control failure impact.\nRecommended Remediation: Assign an owner, implement corrective controls, update documentation, test the fix, and monitor recurrence.\nVerification Steps: Review evidence, validate configuration, confirm control operation, and document audit closure.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REP-003",
+      "endpoint": "/generate-report",
+      "severity": "medium",
+      "category": "outdated software",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Problem Summary: The audit issue identifies that Several internal Jenkins plugins are no longer maintained and lack a documented upgrade or replacement plan. and may weaken security, compliance, or operational control reliability.\nRoot Cause Analysis: Likely causes include missing ownership, outdated procedures, weak monitoring, or incomplete validation evidence.\nRisk Level: Severity should be based on exposure, affected assets, data sensitivity, and control failure impact.\nRecommended Remediation: Assign an owner, implement corrective controls, update documentation, test the fix, and monitor recurrence.\nVerification Steps: Review evidence, validate configuration, confirm control operation, and document audit closure.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REP-004",
+      "endpoint": "/generate-report",
+      "severity": "medium",
+      "category": "missing documentation",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Problem Summary: The audit issue identifies that The vendor access procedure does not define approval expiry, access review cadence, or emergency revocation steps. and may weaken security, compliance, or operational control reliability.\nRoot Cause Analysis: Likely causes include missing ownership, outdated procedures, weak monitoring, or incomplete validation evidence.\nRisk Level: Severity should be based on exposure, affected assets, data sensitivity, and control failure impact.\nRecommended Remediation: Assign an owner, implement corrective controls, update documentation, test the fix, and monitor recurrence.\nVerification Steps: Review evidence, validate configuration, confirm control operation, and document audit closure.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REP-005",
+      "endpoint": "/generate-report",
+      "severity": "critical",
+      "category": "security incident",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Problem Summary: The audit issue identifies that A privileged API token was used outside normal deployment windows, but the investigation did not document token rotation. and may weaken security, compliance, or operational control reliability.\nRoot Cause Analysis: Likely causes include missing ownership, outdated procedures, weak monitoring, or incomplete validation evidence.\nRisk Level: Severity should be based on exposure, affected assets, data sensitivity, and control failure impact.\nRecommended Remediation: Assign an owner, implement corrective controls, update documentation, test the fix, and monitor recurrence.\nVerification Steps: Review evidence, validate configuration, confirm control operation, and document audit closure.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REP-006",
+      "endpoint": "/generate-report",
+      "severity": "high",
+      "category": "data leakage risk",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Problem Summary: The audit issue identifies that Debug logging in the customer support service records full request payloads for failed payment troubleshooting sessions. and may weaken security, compliance, or operational control reliability.\nRoot Cause Analysis: Likely causes include missing ownership, outdated procedures, weak monitoring, or incomplete validation evidence.\nRisk Level: Severity should be based on exposure, affected assets, data sensitivity, and control failure impact.\nRecommended Remediation: Assign an owner, implement corrective controls, update documentation, test the fix, and monitor recurrence.\nVerification Steps: Review evidence, validate configuration, confirm control operation, and document audit closure.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REP-007",
+      "endpoint": "/generate-report",
+      "severity": "high",
+      "category": "backup failure",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Problem Summary: The audit issue identifies that The disaster recovery plan lists backup replication as active, but storage metrics show replication lag exceeding seven days. and may weaken security, compliance, or operational control reliability.\nRoot Cause Analysis: Likely causes include missing ownership, outdated procedures, weak monitoring, or incomplete validation evidence.\nRisk Level: Severity should be based on exposure, affected assets, data sensitivity, and control failure impact.\nRecommended Remediation: Assign an owner, implement corrective controls, update documentation, test the fix, and monitor recurrence.\nVerification Steps: Review evidence, validate configuration, confirm control operation, and document audit closure.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REP-008",
+      "endpoint": "/generate-report",
+      "severity": "medium",
+      "category": "infrastructure vulnerability",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Problem Summary: The audit issue identifies that Administrative SSH access to Linux servers is allowed from broad office subnets instead of a hardened bastion host. and may weaken security, compliance, or operational control reliability.\nRoot Cause Analysis: Likely causes include missing ownership, outdated procedures, weak monitoring, or incomplete validation evidence.\nRisk Level: Severity should be based on exposure, affected assets, data sensitivity, and control failure impact.\nRecommended Remediation: Assign an owner, implement corrective controls, update documentation, test the fix, and monitor recurrence.\nVerification Steps: Review evidence, validate configuration, confirm control operation, and document audit closure.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REP-009",
+      "endpoint": "/generate-report",
+      "severity": "low",
+      "category": "policy violation",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Problem Summary: The audit issue identifies that Monthly security awareness attestations are incomplete for a subset of temporary workers assigned to audit operations. and may weaken security, compliance, or operational control reliability.\nRoot Cause Analysis: Likely causes include missing ownership, outdated procedures, weak monitoring, or incomplete validation evidence.\nRisk Level: Severity should be based on exposure, affected assets, data sensitivity, and control failure impact.\nRecommended Remediation: Assign an owner, implement corrective controls, update documentation, test the fix, and monitor recurrence.\nVerification Steps: Review evidence, validate configuration, confirm control operation, and document audit closure.",
+      "score_average": 5,
+      "passed": true
+    },
+    {
+      "case_id": "REP-010",
+      "endpoint": "/generate-report",
+      "severity": "medium",
+      "category": "configuration weakness",
+      "latency_ms": 0.0,
+      "fallback_used": false,
+      "schema_errors": [],
+      "score": {
+        "accuracy": 5,
+        "clarity": 5,
+        "structure": 5,
+        "actionability": 5,
+        "security_relevance": 5
+      },
+      "weak_categories": [],
+      "response": "Problem Summary: The audit issue identifies that The audit issue workflow permits closure without requiring remediation evidence, verification notes, or owner approval. and may weaken security, compliance, or operational control reliability.\nRoot Cause Analysis: Likely causes include missing ownership, outdated procedures, weak monitoring, or incomplete validation evidence.\nRisk Level: Severity should be based on exposure, affected assets, data sensitivity, and control failure impact.\nRecommended Remediation: Assign an owner, implement corrective controls, update documentation, test the fix, and monitor recurrence.\nVerification Steps: Review evidence, validate configuration, confirm control operation, and document audit closure.",
+      "score_average": 5,
+      "passed": true
+    }
+  ]
+}

@@ -18,6 +18,7 @@ from monitoring.middleware import attach_monitoring_middleware
 from routes.ai_routes import ai_blueprint
 from routes.health_routes import health_blueprint
 from routes.monitoring_routes import monitoring_blueprint
+from routes.task_routes import task_blueprint
 from security.secure_logging import attach_sensitive_data_filter, safe_extra
 
 
@@ -44,6 +45,7 @@ def create_app() -> Flask:
     app.register_blueprint(ai_blueprint)
     app.register_blueprint(health_blueprint)
     app.register_blueprint(monitoring_blueprint)
+    app.register_blueprint(task_blueprint)
     return app
 
 

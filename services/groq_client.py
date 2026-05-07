@@ -25,6 +25,9 @@ class GroqClient:
         base_url: str,
         model: str,
         logger: logging.Logger | None = None,
+        max_retries: int | None = None,
+        backoff_seconds: float | None = None,
+        timeout_seconds: int | None = None,
     ) -> None:
         if not api_key:
             raise ValueError('GROQ_API_KEY must be configured in environment variables.')
@@ -40,6 +43,9 @@ class GroqClient:
         self.cache_ttl_seconds = int(os.getenv('AI_CACHE_TTL_SECONDS', '900'))
         self.cache_enabled = os.getenv('AI_CACHE_ENABLED', 'true').lower() in {'1', 'true', 'yes'}
         self.cache = create_redis_client() if self.cache_enabled else None
+        self.max_retries = max_retries or int(os.getenv('GROQ_MAX_RETRIES', '3'))
+        self.backoff_seconds = backoff_seconds or float(os.getenv('GROQ_BACKOFF_SECONDS', '1.0'))
+        self.timeout_seconds = timeout_seconds or int(os.getenv('GROQ_TIMEOUT_SECONDS', '10'))
 
     def generate(self, prompt: str, max_tokens: int = 1024) -> str:
         if not isinstance(prompt, str) or not prompt.strip():
@@ -72,14 +78,18 @@ class GroqClient:
         return response_text
 
     def _call_groq(self, payload: dict[str, Any]) -> str:
-        retries = 3
-        backoff = 1.0
+        retries = self.max_retries
+        backoff = self.backoff_seconds
         last_error: Exception | None = None
 
         for attempt in range(1, retries + 1):
             try:
                 self.logger.info('Sending request to Groq API', extra={'attempt': attempt})
-                response = self.session.post(f'{self.base_url}/chat/completions', json=payload, timeout=10)
+                response = self.session.post(
+                    f'{self.base_url}/chat/completions',
+                    json=payload,
+                    timeout=self.timeout_seconds,
+                )
                 self._assert_response(response)
                 return self._parse_response(response)
             except (requests.RequestException, ConnectionError, GroqClientError, ValueError) as exc:

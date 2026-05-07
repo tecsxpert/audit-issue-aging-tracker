@@ -27,6 +27,7 @@ class MetricsRegistry:
             self.ai_latency_sum: dict[tuple[str, str], float] = {}
             self.ai_latency_count: dict[tuple[str, str], int] = {}
             self.ai_cache_events: dict[tuple[str, str], int] = {}
+            self.task_events: dict[tuple[str, str], int] = {}
 
     def record_request(self, method: str, path: str, status_code: int, latency_seconds: float) -> None:
         status = str(status_code)
@@ -49,6 +50,11 @@ class MetricsRegistry:
         with self._lock:
             self.ai_cache_events[key] = self.ai_cache_events.get(key, 0) + 1
 
+    def record_task_event(self, queue: str, event: str) -> None:
+        key = (queue, event)
+        with self._lock:
+            self.task_events[key] = self.task_events.get(key, 0) + 1
+
     def snapshot(self) -> dict[str, object]:
         with self._lock:
             return {
@@ -60,6 +66,7 @@ class MetricsRegistry:
                 'ai_latency_sum': dict(self.ai_latency_sum),
                 'ai_latency_count': dict(self.ai_latency_count),
                 'ai_cache_events': dict(self.ai_cache_events),
+                'task_events': dict(self.task_events),
             }
 
     def render_prometheus(self) -> str:
@@ -102,6 +109,11 @@ class MetricsRegistry:
             '# TYPE tool125_ai_cache_events_total counter',
         ])
         lines.extend(_render_counter('tool125_ai_cache_events_total', ('model', 'result'), snapshot['ai_cache_events']))
+        lines.extend([
+            '# HELP tool125_task_events_total Background task queue lifecycle events.',
+            '# TYPE tool125_task_events_total counter',
+        ])
+        lines.extend(_render_counter('tool125_task_events_total', ('queue', 'event'), snapshot['task_events']))
         return '\n'.join(lines) + '\n'
 
 

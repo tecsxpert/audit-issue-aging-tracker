@@ -36,7 +36,7 @@ def attach_sanitization_middleware(app: Flask) -> None:
 
     @app.before_request
     def sanitize_request() -> None:
-        if request.path not in ['/describe', '/recommend', '/generate-report']:
+        if request.path not in ['/describe', '/recommend', '/generate-report', '/tasks/ai']:
             return
         if not request.is_json:
             raise SanitizationError('JSON payload required for AI endpoints.')

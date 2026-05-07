@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: tool-125-ai-service:day11
+    image: tool-125-ai-service:day17
     container_name: tool-125-ai-service
     restart: unless-stopped
     env_file:
@@ -22,6 +22,15 @@ services:
       REQUEST_TIMEOUT_SECONDS: ${REQUEST_TIMEOUT_SECONDS:-10}
       AI_CACHE_ENABLED: ${AI_CACHE_ENABLED:-true}
       AI_CACHE_TTL_SECONDS: ${AI_CACHE_TTL_SECONDS:-900}
+      GROQ_MAX_RETRIES: ${GROQ_MAX_RETRIES:-3}
+      GROQ_BACKOFF_SECONDS: ${GROQ_BACKOFF_SECONDS:-1.0}
+      GROQ_TIMEOUT_SECONDS: ${GROQ_TIMEOUT_SECONDS:-10}
+      AI_TASK_QUEUE_ENABLED: ${AI_TASK_QUEUE_ENABLED:-true}
+      AI_TASK_QUEUE_NAME: ${AI_TASK_QUEUE_NAME:-tool125:task-queue:ai}
+      AI_TASK_RESULT_TTL_SECONDS: ${AI_TASK_RESULT_TTL_SECONDS:-3600}
+      AI_TASK_MAX_ATTEMPTS: ${AI_TASK_MAX_ATTEMPTS:-3}
+      AI_WORKER_CONCURRENCY: ${AI_WORKER_CONCURRENCY:-2}
+      AI_WORKER_HEARTBEAT_TTL_SECONDS: ${AI_WORKER_HEARTBEAT_TTL_SECONDS:-30}
       REDIS_URL: redis://redis:6379/0
       RATE_LIMIT_STORAGE_URI: redis://redis:6379/1
       POSTGRES_HOST: postgres
@@ -43,6 +52,43 @@ services:
       timeout: 5s
       retries: 3
       start_period: 20s
+    networks:
+      - tool125-network
+
+  ai-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tool-125-ai-worker:day17
+    container_name: tool-125-ai-worker
+    restart: unless-stopped
+    command: ["python", "-m", "scalability.worker"]
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_API_BASE_URL: ${GROQ_API_BASE_URL:-https://api.groq.com/openai/v1}
+      GROQ_MODEL: ${GROQ_MODEL:-llama-3.3-70b-versatile}
+      REDIS_URL: redis://redis:6379/0
+      AI_CACHE_ENABLED: ${AI_CACHE_ENABLED:-true}
+      AI_CACHE_TTL_SECONDS: ${AI_CACHE_TTL_SECONDS:-900}
+      GROQ_MAX_RETRIES: ${GROQ_MAX_RETRIES:-3}
+      GROQ_BACKOFF_SECONDS: ${GROQ_BACKOFF_SECONDS:-1.0}
+      GROQ_TIMEOUT_SECONDS: ${GROQ_TIMEOUT_SECONDS:-10}
+      AI_TASK_QUEUE_NAME: ${AI_TASK_QUEUE_NAME:-tool125:task-queue:ai}
+      AI_TASK_RESULT_TTL_SECONDS: ${AI_TASK_RESULT_TTL_SECONDS:-3600}
+      AI_TASK_MAX_ATTEMPTS: ${AI_TASK_MAX_ATTEMPTS:-3}
+      AI_WORKER_ID: default
+      AI_WORKER_POLL_TIMEOUT_SECONDS: ${AI_WORKER_POLL_TIMEOUT_SECONDS:-5}
+      AI_WORKER_HEARTBEAT_TTL_SECONDS: ${AI_WORKER_HEARTBEAT_TTL_SECONDS:-30}
+      JWT_AUTH_ENABLED: "false"
+      JWT_SECRET: ${JWT_SECRET:-worker_no_http_auth_required}
+    depends_on:
+      redis:
+        condition: service_healthy
+      ai-service:
+        condition: service_healthy
     networks:
       - tool125-network
 

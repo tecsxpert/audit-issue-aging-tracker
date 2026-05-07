@@ -1,6 +1,6 @@
 {
   "base_url": "http://127.0.0.1:8000",
-  "generated_at": "2026-05-07T12:52:37.822623+00:00",
+  "generated_at": "2026-05-07T13:04:19.447842+00:00",
   "results": [
     {
       "details": "Required AI and JWT environment values are present.",
@@ -8,12 +8,12 @@
       "status": "pass"
     },
     {
-      "details": "Compose services detected: ['ai-service', 'postgres', 'redis']",
+      "details": "Compose services detected: ['ai-service', 'ai-worker', 'postgres', 'redis']",
       "name": "docker_compose",
       "status": "pass"
     },
     {
-      "details": "/health ok; services: groq, prompt-sanitizer, rate-limiter, redis-cache, monitoring",
+      "details": "/health ok; services: groq, prompt-sanitizer, rate-limiter, redis-cache, monitoring, task-queue",
       "name": "http_health",
       "status": "pass"
     },

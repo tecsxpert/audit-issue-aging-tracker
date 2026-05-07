@@ -57,6 +57,9 @@ ai-service/
 | `/health` | GET | No | Runtime health and dependency status |
 | `/metrics` | GET | No | Prometheus-compatible service metrics |
 | `/monitoring/status` | GET | No | Monitoring and resource status snapshot |
+| `/tasks/health` | GET | No | Background queue and worker heartbeat status |
+| `/tasks/ai` | POST | JWT | Submit long-running AI work as a Redis-backed background task |
+| `/tasks/<task_id>` | GET | No | Read background task state and result metadata |
 | `/describe` | POST | JWT | Explain an aged audit issue |
 | `/recommend` | POST | JWT | Generate remediation recommendations |
 | `/generate-report` | POST | JWT | Generate an audit-ready report |
@@ -146,6 +149,7 @@ python -m pytest
 Run focused validation:
 
 ```sh
+python -m validation.day17_scalability_validation
 python -m validation.day16_monitoring_validation
 python -m validation.security_validation
 python -m validation.endpoint_validation
@@ -188,6 +192,35 @@ Validation:
 
 ```sh
 python -m validation.day16_monitoring_validation
+```
+
+## Scalability and Background Processing
+
+Day 17 scalability adds:
+
+- Redis-backed background task queue for long-running AI operations.
+- `ai-worker` Docker Compose service using `python -m scalability.worker`.
+- `/tasks/ai` async submission endpoint for `/describe`, `/recommend`, and `/generate-report` work.
+- `/tasks/<task_id>` task status lookup endpoint.
+- `/tasks/health` queue depth and worker heartbeat status endpoint.
+- Configurable Groq retries, timeout, exponential backoff, cache TTL, task result TTL, and max task attempts.
+- Graceful worker shutdown handling for `SIGTERM` and `SIGINT`.
+- Concurrent load probe utility at `python -m scalability.load_test`.
+- Task queue lifecycle metrics through `/metrics`.
+
+Async request example:
+
+```sh
+curl -X POST http://127.0.0.1:8000/tasks/ai \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d "{\"endpoint\":\"/describe\",\"issue\":\"Audit issue AI-125 is overdue by 96 days.\"}"
+```
+
+Validation:
+
+```sh
+python -m validation.day17_scalability_validation
 ```
 
 ## Day 15 Documentation

@@ -22,7 +22,7 @@ SECURE_HEADERS: dict[str, str] = {
     'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none';",
     'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
 }
-PROTECTED_PATHS = {'/describe', '/recommend', '/generate-report'}
+PROTECTED_PATHS = {'/describe', '/recommend', '/generate-report', '/tasks/ai'}
 
 
 class SecurityError(ValueError):

@@ -24,6 +24,7 @@ REQUIRED_METRICS = (
     'tool125_ai_response_latency_seconds_sum',
     'tool125_ai_response_latency_seconds_count',
     'tool125_ai_cache_events_total',
+    'tool125_task_events_total',
 )
 
 

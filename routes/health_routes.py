@@ -20,17 +20,23 @@ def health() -> tuple[dict[str, object], int]:
     return jsonify({
         'success': True,
         'status': 'ok',
-        'services': ['groq', 'prompt-sanitizer', 'rate-limiter', 'redis-cache', 'monitoring'],
+        'services': ['groq', 'prompt-sanitizer', 'rate-limiter', 'redis-cache', 'monitoring', 'task-queue'],
         'dependencies': {
             'groq': 'configured' if current_app.config.get('GROQ_API_KEY') else 'missing',
             'redis': redis_status,
             'rate_limiter': 'configured',
             'monitoring': 'ok',
+            'task_queue': 'configured' if current_app.config.get('AI_TASK_QUEUE_ENABLED') else 'disabled',
         },
         'monitoring': {
             'status': 'ok',
             'metrics_endpoint': '/metrics',
             'resource_monitoring': get_resource_snapshot()['status'],
+        },
+        'scalability': {
+            'task_queue': 'configured' if current_app.config.get('AI_TASK_QUEUE_ENABLED') else 'disabled',
+            'task_health_endpoint': '/tasks/health',
+            'worker_concurrency': current_app.config.get('AI_WORKER_CONCURRENCY'),
         },
         'generated_at': utc_timestamp(),
     }), 200

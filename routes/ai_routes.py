@@ -17,6 +17,9 @@ def _get_groq_client() -> GroqClient:
         base_url=current_app.config['GROQ_API_BASE_URL'],
         model=current_app.config['GROQ_MODEL'],
         logger=current_app.logger,
+        max_retries=current_app.config.get('GROQ_MAX_RETRIES'),
+        backoff_seconds=current_app.config.get('GROQ_BACKOFF_SECONDS'),
+        timeout_seconds=current_app.config.get('GROQ_TIMEOUT_SECONDS'),
     )
 
 

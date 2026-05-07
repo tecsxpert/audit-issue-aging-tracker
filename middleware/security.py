@@ -2,6 +2,7 @@ from __future__ import annotations
 import logging
 import re
 import signal
+import threading
 import time
 from typing import Any
 from flask import Flask, current_app, jsonify, request
@@ -53,12 +54,12 @@ def attach_security_middleware(app: Flask, config: Any) -> None:
         return jsonify(_error_payload('Request processing timed out.')), 504
 
     def _set_timeout(seconds: int) -> None:
-        if hasattr(signal, 'SIGALRM'):
+        if hasattr(signal, 'SIGALRM') and threading.current_thread() is threading.main_thread():
             signal.signal(signal.SIGALRM, lambda signum, frame: (_ for _ in ()).throw(RequestTimeoutError('Request timed out.')))
             signal.alarm(seconds)
 
     def _clear_timeout() -> None:
-        if hasattr(signal, 'SIGALRM'):
+        if hasattr(signal, 'SIGALRM') and threading.current_thread() is threading.main_thread():
             signal.alarm(0)
 
     @app.before_request

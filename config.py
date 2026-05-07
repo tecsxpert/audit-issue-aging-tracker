@@ -5,7 +5,7 @@ import os
 class Config:
     def __init__(self) -> None:
         self.GROQ_API_KEY: str = os.getenv('GROQ_API_KEY', '')
-        self.GROQ_API_BASE_URL: str = os.getenv('GROQ_API_BASE_URL', 'https://api.groq.com/v1')
+        self.GROQ_API_BASE_URL: str = os.getenv('GROQ_API_BASE_URL', 'https://api.groq.com/openai/v1')
         self.GROQ_MODEL: str = os.getenv('GROQ_MODEL', 'llama-3.3-70b-versatile')
         self.RATE_LIMIT: str = os.getenv('RATE_LIMIT', '30 per minute')
         self.RATE_LIMIT_STORAGE_URI: str = os.getenv('RATE_LIMIT_STORAGE_URI', os.getenv('REDIS_URL', ''))

@@ -1,0 +1,65 @@
+{
+  "samples": [
+    {
+      "endpoint": "/describe",
+      "iteration": 1,
+      "latency_ms": 12.01,
+      "response_length": 1577,
+      "score": 10,
+      "status_code": 200,
+      "success": true
+    },
+    {
+      "endpoint": "/recommend",
+      "iteration": 1,
+      "latency_ms": 11.56,
+      "response_length": 1105,
+      "score": 10,
+      "status_code": 200,
+      "success": true
+    },
+    {
+      "endpoint": "/generate-report",
+      "iteration": 1,
+      "latency_ms": 38.64,
+      "response_length": 1721,
+      "score": 10,
+      "status_code": 200,
+      "success": true
+    },
+    {
+      "endpoint": "/describe",
+      "iteration": 2,
+      "latency_ms": 76.24,
+      "response_length": 1565,
+      "score": 10,
+      "status_code": 200,
+      "success": true
+    },
+    {
+      "endpoint": "/recommend",
+      "iteration": 2,
+      "latency_ms": 9.72,
+      "response_length": 1256,
+      "score": 10,
+      "status_code": 200,
+      "success": true
+    },
+    {
+      "endpoint": "/generate-report",
+      "iteration": 2,
+      "latency_ms": 12.22,
+      "response_length": 2205,
+      "score": 10,
+      "status_code": 200,
+      "success": true
+    }
+  ],
+  "summary": {
+    "average_latency_ms": 26.73,
+    "failure_count": 0,
+    "p95_latency_ms": 38.64,
+    "redis_ai_cache_keys": "unavailable",
+    "sample_count": 6
+  }
+}

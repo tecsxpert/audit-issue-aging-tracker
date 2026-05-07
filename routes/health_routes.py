@@ -1,5 +1,6 @@
 from flask import Blueprint, current_app, jsonify
 from cache.redis_client import create_redis_client
+from monitoring.resources import get_resource_snapshot
 from routes.ai_routes import utc_timestamp
 
 health_blueprint = Blueprint('health', __name__)
@@ -19,11 +20,17 @@ def health() -> tuple[dict[str, object], int]:
     return jsonify({
         'success': True,
         'status': 'ok',
-        'services': ['groq', 'prompt-sanitizer', 'rate-limiter', 'redis-cache'],
+        'services': ['groq', 'prompt-sanitizer', 'rate-limiter', 'redis-cache', 'monitoring'],
         'dependencies': {
             'groq': 'configured' if current_app.config.get('GROQ_API_KEY') else 'missing',
             'redis': redis_status,
             'rate_limiter': 'configured',
+            'monitoring': 'ok',
+        },
+        'monitoring': {
+            'status': 'ok',
+            'metrics_endpoint': '/metrics',
+            'resource_monitoring': get_resource_snapshot()['status'],
         },
         'generated_at': utc_timestamp(),
     }), 200

@@ -6,6 +6,17 @@ from typing import Any
 from services.sensitive_scanner import redact_for_log
 
 _RESERVED_ATTRS = set(logging.makeLogRecord({}).__dict__.keys())
+_SENSITIVE_LOG_KEYS = {
+    'authorization',
+    'api_key',
+    'apikey',
+    'groq_api_key',
+    'jwt_secret',
+    'password',
+    'passwd',
+    'secret',
+    'token',
+}
 
 
 class SensitiveDataFilter(logging.Filter):
@@ -21,7 +32,7 @@ class SensitiveDataFilter(logging.Filter):
         for key, value in list(record.__dict__.items()):
             if key in _RESERVED_ATTRS or key in {'exc_info', 'exc_text', 'stack_info'}:
                 continue
-            record.__dict__[key] = redact_for_log(value)
+            record.__dict__[key] = '[REDACTED]' if _is_sensitive_log_key(key) else redact_for_log(value)
         return True
 
 
@@ -31,4 +42,11 @@ def attach_sensitive_data_filter(handler: logging.Handler) -> None:
 
 
 def safe_extra(**values: Any) -> dict[str, Any]:
-    return {key: redact_for_log(value) for key, value in values.items()}
+    return {key: '[REDACTED]' if _is_sensitive_log_key(key) else redact_for_log(value) for key, value in values.items()}
+
+
+def _is_sensitive_log_key(key: str) -> bool:
+    normalized = key.lower().replace('-', '_')
+    return normalized in _SENSITIVE_LOG_KEYS or any(
+        term in normalized for term in ('authorization', 'password', 'secret', 'token', 'api_key')
+    )

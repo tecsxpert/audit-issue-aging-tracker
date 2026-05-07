@@ -11,6 +11,7 @@ import requests
 from requests import Response
 
 from cache.redis_client import create_redis_client
+from monitoring.metrics import metrics_registry
 
 
 class GroqClientError(Exception):
@@ -37,7 +38,8 @@ class GroqClient:
         })
         self.logger = logger or logging.getLogger(__name__)
         self.cache_ttl_seconds = int(os.getenv('AI_CACHE_TTL_SECONDS', '900'))
-        self.cache = create_redis_client()
+        self.cache_enabled = os.getenv('AI_CACHE_ENABLED', 'true').lower() in {'1', 'true', 'yes'}
+        self.cache = create_redis_client() if self.cache_enabled else None
 
     def generate(self, prompt: str, max_tokens: int = 1024) -> str:
         if not isinstance(prompt, str) or not prompt.strip():
@@ -60,9 +62,11 @@ class GroqClient:
         cache_key = self._cache_key(payload)
         cached = self._cache_get(cache_key)
         if cached:
+            metrics_registry.record_ai_cache_event(self.model, 'hit')
             self.logger.info('Groq response served from Redis cache', extra={'cache_key': cache_key})
             return cached
 
+        metrics_registry.record_ai_cache_event(self.model, 'miss' if self.cache_enabled else 'disabled')
         response_text = self._call_groq(payload)
         self._cache_set(cache_key, response_text)
         return response_text

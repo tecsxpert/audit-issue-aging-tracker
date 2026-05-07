@@ -55,6 +55,8 @@ ai-service/
 | Endpoint | Method | Auth | Purpose |
 | --- | --- | --- | --- |
 | `/health` | GET | No | Runtime health and dependency status |
+| `/metrics` | GET | No | Prometheus-compatible service metrics |
+| `/monitoring/status` | GET | No | Monitoring and resource status snapshot |
 | `/describe` | POST | JWT | Explain an aged audit issue |
 | `/recommend` | POST | JWT | Generate remediation recommendations |
 | `/generate-report` | POST | JWT | Generate an audit-ready report |
@@ -144,6 +146,7 @@ python -m pytest
 Run focused validation:
 
 ```sh
+python -m validation.day16_monitoring_validation
 python -m validation.security_validation
 python -m validation.endpoint_validation
 python -m validation.final_system_check
@@ -168,6 +171,24 @@ Security controls include:
 - Structured fallback responses for validation, auth, Groq, and internal failures.
 
 See [SECURITY.md](SECURITY.md), [docs/day15/SECURITY_TALKING_POINTS.md](docs/day15/SECURITY_TALKING_POINTS.md), and [docs/FINAL_SECURITY_CHECKLIST.md](docs/FINAL_SECURITY_CHECKLIST.md).
+
+## Monitoring and Observability
+
+Day 16 monitoring adds:
+
+- Structured request start and completion logs with request IDs.
+- Sensitive field redaction for authorization headers, JWTs, API keys, passwords, secrets, tokens, and PII patterns.
+- Prometheus-compatible `/metrics` output.
+- HTTP request count, error count, and latency counters.
+- AI response timing and AI cache hit, miss, and disabled counters.
+- `/monitoring/status` resource snapshot for process CPU and memory plus container cgroup data when available.
+- `/health` monitoring status and metrics endpoint reference.
+
+Validation:
+
+```sh
+python -m validation.day16_monitoring_validation
+```
 
 ## Day 15 Documentation
 

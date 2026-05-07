@@ -14,8 +14,10 @@ from werkzeug.exceptions import BadRequest, HTTPException
 from config import Config
 from middleware.sanitization import attach_sanitization_middleware
 from middleware.security import attach_security_middleware
+from monitoring.middleware import attach_monitoring_middleware
 from routes.ai_routes import ai_blueprint
 from routes.health_routes import health_blueprint
+from routes.monitoring_routes import monitoring_blueprint
 from security.secure_logging import attach_sensitive_data_filter, safe_extra
 
 
@@ -29,6 +31,7 @@ def create_app() -> Flask:
 
     _configure_logging(app)
     _register_error_handlers(app)
+    attach_monitoring_middleware(app)
 
     Limiter(
         key_func=get_remote_address,
@@ -40,6 +43,7 @@ def create_app() -> Flask:
     attach_security_middleware(app, config)
     app.register_blueprint(ai_blueprint)
     app.register_blueprint(health_blueprint)
+    app.register_blueprint(monitoring_blueprint)
     return app
 
 
@@ -57,6 +61,7 @@ def _configure_logging(app: Flask) -> None:
 
     app.logger.handlers = [handler]
     app.logger.setLevel(logging.INFO)
+    app.logger.propagate = False
     app.logger.info(
         'Application logging configured',
         extra=safe_extra(request_id=os.getenv('REQUEST_ID', 'local')),

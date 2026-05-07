@@ -1,7 +1,9 @@
 from __future__ import annotations
 from datetime import datetime, timezone
+import time
 from typing import Any
 from flask import Blueprint, current_app, jsonify, request
+from monitoring.metrics import metrics_registry
 from werkzeug.exceptions import BadRequest
 from services.groq_client import GroqClient, GroqClientError
 from services.prompt_manager import PromptBuilder, PromptOptimizer
@@ -54,7 +56,7 @@ def _error_payload(message: str) -> dict[str, Any]:
 
 def _generate_endpoint_response(endpoint: str, prompt: str, issue: str) -> tuple[Any, int]:
     client = _get_groq_client()
-    response_text = client.generate(prompt)
+    response_text = _timed_ai_generate(client, prompt, endpoint)
     if not isinstance(response_text, str) or not response_text.strip():
         raise GroqClientError('Groq API returned a malformed AI response.')
 
@@ -62,12 +64,24 @@ def _generate_endpoint_response(endpoint: str, prompt: str, issue: str) -> tuple
     score = evaluator.score(response_text)
     if score < 7:
         prompt = evaluator.optimize(prompt, issue, context=endpoint.strip('/'))
-        response_text = client.generate(prompt)
+        response_text = _timed_ai_generate(client, prompt, endpoint)
         if not isinstance(response_text, str) or not response_text.strip():
             raise GroqClientError('Groq API returned a malformed AI response.')
         score = evaluator.score(response_text)
 
     return jsonify(_success_payload(endpoint, issue, response_text, score)), 200
+
+
+def _timed_ai_generate(client: GroqClient, prompt: str, endpoint: str) -> str:
+    started_at = time.perf_counter()
+    try:
+        return client.generate(prompt)
+    finally:
+        metrics_registry.record_ai_timing(
+            endpoint,
+            current_app.config.get('GROQ_MODEL', 'unknown'),
+            time.perf_counter() - started_at,
+        )
 
 
 def _safe_json_payload() -> dict[str, Any]:
@@ -82,6 +96,7 @@ def describe() -> tuple[Any, int]:
     try:
         payload = _safe_json_payload()
         issue = _validate_body(payload)
+        current_app.logger.info('describe_request_validated', extra={'endpoint': '/describe'})
         prompt = PromptBuilder.describe(issue)
         return _generate_endpoint_response('/describe', prompt, issue)
     except GroqClientError as error:
@@ -99,6 +114,7 @@ def recommend() -> tuple[Any, int]:
     try:
         payload = _safe_json_payload()
         issue = _validate_body(payload)
+        current_app.logger.info('recommend_request_validated', extra={'endpoint': '/recommend'})
         prompt = PromptBuilder.recommend(issue)
         return _generate_endpoint_response('/recommend', prompt, issue)
     except GroqClientError as error:
@@ -116,6 +132,7 @@ def generate_report() -> tuple[Any, int]:
     try:
         payload = _safe_json_payload()
         issue = _validate_body(payload)
+        current_app.logger.info('generate_report_request_validated', extra={'endpoint': '/generate-report'})
         prompt = PromptBuilder.generate_report(issue)
         return _generate_endpoint_response('/generate-report', prompt, issue)
     except GroqClientError as error:

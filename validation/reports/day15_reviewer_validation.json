@@ -1,0 +1,41 @@
+{
+  "base_url": "http://127.0.0.1:8000",
+  "generated_at": "2026-05-07T12:43:02.938856+00:00",
+  "results": [
+    {
+      "details": "Required AI and JWT environment values are present.",
+      "name": "environment",
+      "status": "pass"
+    },
+    {
+      "details": "Compose services detected: ['ai-service', 'postgres', 'redis']",
+      "name": "docker_compose",
+      "status": "pass"
+    },
+    {
+      "details": "/health ok; services: groq, prompt-sanitizer, rate-limiter, redis-cache",
+      "name": "http_health",
+      "status": "pass"
+    },
+    {
+      "details": "Redis ping passed at redis://localhost:6379/0",
+      "name": "redis",
+      "status": "pass"
+    },
+    {
+      "details": "Protected AI endpoints reject unauthenticated requests.",
+      "name": "protected_endpoint_auth",
+      "status": "pass"
+    },
+    {
+      "details": "Prompt injection, SQL injection, and PII payloads were rejected.",
+      "name": "security_payloads",
+      "status": "pass"
+    },
+    {
+      "details": "Live /describe call passed with score 10.",
+      "name": "ai_connectivity",
+      "status": "pass"
+    }
+  ]
+}

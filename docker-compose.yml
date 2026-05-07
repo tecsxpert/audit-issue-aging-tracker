@@ -46,7 +46,6 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: tool-125-redis
     restart: unless-stopped
     command: ["redis-server", "--appendonly", "yes"]
     ports:

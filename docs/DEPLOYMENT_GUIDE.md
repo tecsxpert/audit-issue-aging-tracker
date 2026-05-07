@@ -25,7 +25,7 @@ docker compose ps
 Expected services:
 
 - `tool-125-ai-service`
-- `tool-125-redis`
+- Redis available on `localhost:6379`
 - `tool-125-postgres`
 
 All should report healthy.

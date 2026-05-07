@@ -1,0 +1,76 @@
+[
+  {
+    "case": "groq_api_failure",
+    "trigger": "Groq network error, quota issue, invalid API key, or provider outage.",
+    "expected_http_status": 502,
+    "expected_response": {
+      "success": false,
+      "status": "error",
+      "message": "Groq API failed: Groq API failed after 3 attempts: <provider error>",
+      "generated_at": "<utc timestamp>"
+    },
+    "speaker_note": "The Flask service remains available and returns a controlled error rather than exposing internal stack traces."
+  },
+  {
+    "case": "redis_unavailable",
+    "trigger": "Redis container is stopped or unreachable.",
+    "expected_http_status": 200,
+    "expected_response": {
+      "success": true,
+      "status": "success",
+      "endpoint": "/describe",
+      "score": 7,
+      "response": "<live Groq response without cache acceleration>"
+    },
+    "speaker_note": "Redis improves caching and shared rate limits, but AI generation can continue without cached reads or writes."
+  },
+  {
+    "case": "invalid_jwt",
+    "trigger": "Missing, expired, malformed, or wrong-audience JWT.",
+    "expected_http_status": 401,
+    "expected_response": {
+      "success": false,
+      "status": "error",
+      "message": "Authorization header must contain a Bearer token.",
+      "generated_at": "<utc timestamp>"
+    },
+    "speaker_note": "The protected AI endpoints reject unauthenticated requests before prompt generation."
+  },
+  {
+    "case": "prompt_injection",
+    "trigger": "Payload attempts to override system instructions.",
+    "expected_http_status": 400,
+    "expected_response": {
+      "success": false,
+      "status": "error",
+      "message": "Prompt injection content detected and rejected.",
+      "generated_at": "<utc timestamp>"
+    },
+    "speaker_note": "The service blocks unsafe prompt patterns before they reach Groq."
+  },
+  {
+    "case": "malformed_json",
+    "trigger": "Invalid JSON body or non-object payload.",
+    "expected_http_status": 400,
+    "expected_response": {
+      "success": false,
+      "status": "error",
+      "message": "Malformed JSON request body.",
+      "generated_at": "<utc timestamp>"
+    },
+    "speaker_note": "Input validation keeps endpoint behavior predictable."
+  },
+  {
+    "case": "request_timeout",
+    "trigger": "Request processing exceeds configured timeout.",
+    "expected_http_status": 504,
+    "expected_response": {
+      "success": false,
+      "status": "error",
+      "message": "Request processing timed out.",
+      "generated_at": "<utc timestamp>"
+    },
+    "speaker_note": "Timeouts protect demo stability and keep clients from waiting indefinitely."
+  }
+]
+

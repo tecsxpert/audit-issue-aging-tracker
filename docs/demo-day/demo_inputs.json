@@ -1,0 +1,73 @@
+[
+  {
+    "id": "AUD-001",
+    "category": "critical_vulnerability",
+    "severity": "critical",
+    "endpoint_focus": "describe",
+    "issue": "Critical VPN appliance vulnerability remains unpatched for 47 days on the finance network segment, exposing remote access infrastructure to known exploit activity."
+  },
+  {
+    "id": "AUD-002",
+    "category": "compliance_failure",
+    "severity": "high",
+    "endpoint_focus": "recommend",
+    "issue": "SOX privileged access review for the ERP production database is overdue by 32 days, and 14 admin accounts have no documented business owner approval."
+  },
+  {
+    "id": "AUD-003",
+    "category": "access_control",
+    "severity": "high",
+    "endpoint_focus": "generate-report",
+    "issue": "Former contractor accounts remain enabled in the cloud identity provider 21 days after contract end, including two accounts with production support group membership."
+  },
+  {
+    "id": "AUD-004",
+    "category": "outdated_software",
+    "severity": "medium",
+    "endpoint_focus": "recommend",
+    "issue": "The internal ticketing server is running an unsupported operating system version and has missed endpoint protection updates for 90 days."
+  },
+  {
+    "id": "AUD-005",
+    "category": "data_leakage",
+    "severity": "high",
+    "endpoint_focus": "generate-report",
+    "issue": "Customer export files containing partial account data are stored in a shared analytics bucket without lifecycle deletion or access review evidence for 68 days."
+  },
+  {
+    "id": "AUD-006",
+    "category": "logging_monitoring",
+    "severity": "medium",
+    "endpoint_focus": "describe",
+    "issue": "Security event forwarding from three payment application servers has been disabled for 12 days, creating a monitoring blind spot for PCI-relevant systems."
+  },
+  {
+    "id": "AUD-007",
+    "category": "change_management",
+    "severity": "medium",
+    "endpoint_focus": "recommend",
+    "issue": "Emergency firewall changes were implemented without post-implementation review, and four rules remain active 30 days after the approved temporary window."
+  },
+  {
+    "id": "AUD-008",
+    "category": "backup_recovery",
+    "severity": "high",
+    "endpoint_focus": "generate-report",
+    "issue": "Database backup restoration testing for the claims platform has not been performed for two quarters, and the recovery runbook has no current owner."
+  },
+  {
+    "id": "AUD-009",
+    "category": "third_party_risk",
+    "severity": "medium",
+    "endpoint_focus": "describe",
+    "issue": "A critical vendor with API access to customer records has an expired security assessment and no updated SOC report on file for 75 days."
+  },
+  {
+    "id": "AUD-010",
+    "category": "secrets_management",
+    "severity": "critical",
+    "endpoint_focus": "recommend",
+    "issue": "Static service account keys used by the deployment pipeline have not been rotated for 180 days and are shared across development and production environments."
+  }
+]
+

@@ -1,0 +1,4 @@
+# 60-Second Technical Explanation
+
+Tool-125 uses a Python 3.11 Flask microservice to provide AI support for audit issue aging. The client sends a JSON audit issue to a protected endpoint such as `/describe`, `/recommend`, or `/generate-report`. Before the request reaches the model, middleware validates the JWT, enforces JSON content, checks request size, blocks prompt injection and SQL injection patterns, and rejects sensitive personal data. The route then builds a task-specific prompt and sends it to Groq using the `llama-3.3-70b-versatile` model. Redis is used for AI response caching and Flask-Limiter rate limiting, so repeated safe requests are faster and abuse is controlled. The service runs in Docker Compose with Redis and PostgreSQL dependencies, and `/health` exposes runtime status. If Groq fails, the API returns a structured fallback error instead of crashing.
+

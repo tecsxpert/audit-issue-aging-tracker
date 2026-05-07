@@ -97,6 +97,9 @@ See [SECURITY.md](SECURITY.md) and [FINAL_SECURITY_CHECKLIST.md](docs/FINAL_SECU
 
 Demo documentation:
 
+- [DEMO_DAY_GUIDE.md](docs/demo-day/DEMO_DAY_GUIDE.md)
+- [AI_DEMO_SCRIPT.md](docs/demo-day/AI_DEMO_SCRIPT.md)
+- [QUICK_REFERENCE.md](docs/demo-day/QUICK_REFERENCE.md)
 - [DEMO_GUIDE.md](docs/DEMO_GUIDE.md)
 - [DEMO_FLOW.md](docs/DEMO_FLOW.md)
 - [demo_talking_points.md](docs/demo_talking_points.md)

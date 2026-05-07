@@ -1,0 +1,113 @@
+[
+  {
+    "id": "AUD-001",
+    "expected_describe": "The issue indicates delayed remediation of a critical remote access vulnerability on a sensitive finance network segment. The likely root cause is weak patch governance or exception tracking. Business impact includes elevated risk of unauthorized access, credential theft, and disruption to finance operations. Because the issue has aged for 47 days during known exploit activity, residual risk remains critical until patching and exposure validation are complete.",
+    "expected_recommend": [
+      "Apply the vendor security update or approved mitigation immediately.",
+      "Restrict VPN exposure to trusted source ranges until remediation is verified.",
+      "Review VPN logs for suspicious authentication and exploitation attempts.",
+      "Document patch evidence, vulnerability scan results, and risk acceptance only if remediation cannot be completed."
+    ],
+    "expected_report_summary": "Critical aged vulnerability affecting remote access infrastructure. Immediate patching, containment, and evidence review are required before closure."
+  },
+  {
+    "id": "AUD-002",
+    "expected_describe": "The overdue SOX access review creates a control gap over privileged ERP database access. Missing business owner approval means the organization cannot prove that administrator access is appropriate, current, and least privileged.",
+    "expected_recommend": [
+      "Complete the privileged access review with business owner sign-off.",
+      "Disable, downgrade, or justify all unapproved admin accounts.",
+      "Create evidence showing reviewer, timestamp, decision, and remediation result.",
+      "Add escalation rules for future overdue SOX access reviews."
+    ],
+    "expected_report_summary": "High-risk SOX control failure requiring access recertification, remediation of unapproved accounts, and stronger review monitoring."
+  },
+  {
+    "id": "AUD-003",
+    "expected_describe": "Enabled contractor accounts after termination indicate an offboarding control failure. Production support membership increases the impact because former users may retain privileged operational access.",
+    "expected_recommend": [
+      "Disable the former contractor accounts immediately.",
+      "Remove production group memberships and rotate any shared credentials they could access.",
+      "Compare HR termination dates against identity provider deactivation timestamps.",
+      "Implement automated offboarding alerts for aged active accounts."
+    ],
+    "expected_report_summary": "High-risk access control issue involving former contractors with production-related privileges."
+  },
+  {
+    "id": "AUD-004",
+    "expected_describe": "Unsupported software and stale endpoint protection increase vulnerability exposure and reduce vendor support options. The aging period indicates that asset lifecycle and patch management are not operating effectively.",
+    "expected_recommend": [
+      "Upgrade or isolate the unsupported server.",
+      "Restore endpoint protection updates and confirm agent health.",
+      "Run a vulnerability scan after updates are complete.",
+      "Track an owner-approved migration plan if immediate upgrade is not possible."
+    ],
+    "expected_report_summary": "Medium-risk outdated software issue requiring upgrade, compensating controls, and endpoint protection validation."
+  },
+  {
+    "id": "AUD-005",
+    "expected_describe": "Shared analytics storage with customer export files creates a data exposure risk. Missing lifecycle deletion and access review evidence means the team cannot prove that sensitive exports are limited, retained appropriately, or reviewed.",
+    "expected_recommend": [
+      "Restrict bucket access to approved analytics roles.",
+      "Apply lifecycle deletion aligned to retention policy.",
+      "Inventory existing exports and remove files no longer required.",
+      "Generate access review evidence and monitoring alerts for future exports."
+    ],
+    "expected_report_summary": "High-risk data leakage issue requiring access restriction, retention controls, and evidence of review."
+  },
+  {
+    "id": "AUD-006",
+    "expected_describe": "Disabled event forwarding creates a detection gap for PCI-relevant systems. Security teams may miss indicators of compromise, policy violations, or unauthorized activity during the 12-day window.",
+    "expected_recommend": [
+      "Restore event forwarding from all affected payment application servers.",
+      "Confirm log receipt in the SIEM and reconcile missing coverage periods.",
+      "Investigate why forwarding was disabled.",
+      "Add alerting for future log source silence."
+    ],
+    "expected_report_summary": "Medium-risk monitoring gap affecting payment systems and incident detection reliability."
+  },
+  {
+    "id": "AUD-007",
+    "expected_describe": "Temporary emergency firewall rules that remain active after the approved window indicate weak change governance. The issue may expand network exposure beyond the documented business need.",
+    "expected_recommend": [
+      "Review each temporary rule with the network owner.",
+      "Remove rules no longer required or convert them through normal change approval.",
+      "Validate firewall rule scope and traffic logs.",
+      "Add expiry tracking for emergency firewall changes."
+    ],
+    "expected_report_summary": "Medium-risk change management issue requiring rule review, cleanup, and stronger expiration controls."
+  },
+  {
+    "id": "AUD-008",
+    "expected_describe": "Missing restoration tests reduce confidence that claims platform data can be recovered within business expectations. Lack of runbook ownership increases recovery delay risk during an outage.",
+    "expected_recommend": [
+      "Assign a recovery runbook owner.",
+      "Perform and document a database restore test.",
+      "Compare actual recovery time and recovery point results against requirements.",
+      "Schedule recurring restoration tests with evidence retention."
+    ],
+    "expected_report_summary": "High-risk resilience issue requiring restoration evidence and accountable recovery ownership."
+  },
+  {
+    "id": "AUD-009",
+    "expected_describe": "An expired vendor assessment creates uncertainty about the security posture of a third party with customer data access. The aging period increases compliance and contractual risk.",
+    "expected_recommend": [
+      "Request updated SOC report and security questionnaire evidence.",
+      "Review current API permissions and remove unnecessary access.",
+      "Document risk acceptance if vendor evidence is delayed.",
+      "Add renewal alerts before future vendor assessments expire."
+    ],
+    "expected_report_summary": "Medium-risk third-party oversight issue involving outdated assurance evidence for a customer-data vendor."
+  },
+  {
+    "id": "AUD-010",
+    "expected_describe": "Long-lived static deployment keys shared across environments create a critical secrets management risk. Compromise of one key could affect both development and production pipelines.",
+    "expected_recommend": [
+      "Rotate the static service account keys immediately.",
+      "Separate development and production identities.",
+      "Move pipeline authentication to short-lived or workload identity credentials.",
+      "Search logs and repositories for exposure evidence."
+    ],
+    "expected_report_summary": "Critical secrets management issue requiring key rotation, environment separation, and stronger credential controls."
+  }
+]
+

@@ -1,0 +1,83 @@
+name: AI Service CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "**"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+env:
+  GROQ_API_KEY: test-ci-key
+  GROQ_API_BASE_URL: https://api.groq.com/openai/v1
+  GROQ_MODEL: llama-3.3-70b-versatile
+  JWT_AUTH_ENABLED: "true"
+  JWT_SECRET: ci_jwt_secret_32_characters_minimum
+  JWT_ALGORITHM: HS256
+  JWT_AUDIENCE: tool-125
+  JWT_ISSUER: tool-125-auth
+  RATE_LIMIT: 10000 per minute
+  RATE_LIMIT_STORAGE_URI: memory://
+  AI_CACHE_ENABLED: "false"
+  REDIS_URL: redis://localhost:6379/0
+  AI_SERVICE_BASE_URL: http://127.0.0.1:8000
+
+jobs:
+  lint-test-security:
+    name: Lint, Test, and Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install ruff bandit pip-audit
+
+      - name: Syntax compile
+        run: python -m compileall .
+
+      - name: Ruff lint
+        run: ruff check . --select E9,F63,F7,F82
+
+      - name: Pytest
+        run: python -m pytest
+
+      - name: Dependency vulnerability audit
+        run: pip-audit -r requirements.txt
+
+      - name: Bandit security scan
+        run: bandit -r . -x tests,.pytest_cache,__pycache__ --severity-level high
+
+      - name: Day 18 static deployment validation
+        run: python -m validation.day18_deployment_validation --static-only
+
+  docker-build:
+    name: Docker Build Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build runtime image
+        run: docker build -t tool-125-ai-service:ci .
+
+      - name: Validate Compose files
+        run: docker compose -f docker-compose.yml -f docker-compose.prod.yml config

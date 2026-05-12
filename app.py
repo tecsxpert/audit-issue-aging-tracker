@@ -58,11 +58,11 @@ def _configure_logging(app: Flask) -> None:
     attach_sensitive_data_filter(handler)
 
     root_logger = logging.getLogger()
-    root_logger.setLevel(logging.INFO)
+    root_logger.setLevel(os.getenv('LOG_LEVEL', 'INFO').upper())
     root_logger.handlers = [handler]
 
     app.logger.handlers = [handler]
-    app.logger.setLevel(logging.INFO)
+    app.logger.setLevel(os.getenv('LOG_LEVEL', 'INFO').upper())
     app.logger.propagate = False
     app.logger.info(
         'Application logging configured',

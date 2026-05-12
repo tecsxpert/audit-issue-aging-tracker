@@ -16,6 +16,10 @@ def _float_env(name: str, default: float) -> float:
 
 class Config:
     def __init__(self) -> None:
+        self.APP_ENV: str = os.getenv('APP_ENV', 'development')
+        self.DEPLOYMENT_ENV: str = os.getenv('DEPLOYMENT_ENV', self.APP_ENV)
+        self.LOG_LEVEL: str = os.getenv('LOG_LEVEL', 'INFO')
+        self.RELEASE_VERSION: str = os.getenv('RELEASE_VERSION', 'local')
         self.GROQ_API_KEY: str = os.getenv('GROQ_API_KEY', '')
         self.GROQ_API_BASE_URL: str = os.getenv('GROQ_API_BASE_URL', 'https://api.groq.com/openai/v1')
         self.GROQ_MODEL: str = os.getenv('GROQ_MODEL', 'llama-3.3-70b-versatile')

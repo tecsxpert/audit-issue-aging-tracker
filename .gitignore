@@ -6,3 +6,7 @@ coverage.xml
 htmlcov/
 node_modules/
 venv/
+deployment/audit/*.jsonl
+deployment/backups/
+validation/reports/day18_*.json
+validation/reports/uptime_recovery_validation.json

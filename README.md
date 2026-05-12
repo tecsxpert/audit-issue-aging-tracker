@@ -1,5 +1,8 @@
 # Tool-125 - Audit Issue Aging Tracker AI Service
 
+[![AI Service CI](https://github.com/ShekharPatil9120/audit-issue-aging-tracker/actions/workflows/ai-service-ci.yml/badge.svg)](https://github.com/ShekharPatil9120/audit-issue-aging-tracker/actions/workflows/ai-service-ci.yml)
+[![AI Service Release](https://github.com/ShekharPatil9120/audit-issue-aging-tracker/actions/workflows/ai-service-release.yml/badge.svg)](https://github.com/ShekharPatil9120/audit-issue-aging-tracker/actions/workflows/ai-service-release.yml)
+
 Production-oriented Flask AI service for analyzing aged audit issues, generating remediation recommendations, and producing audit-ready report text for the Tool-125 capstone project.
 
 ## What It Provides
@@ -151,6 +154,7 @@ Run focused validation:
 ```sh
 python -m validation.day17_scalability_validation
 python -m validation.day16_monitoring_validation
+python -m validation.day18_deployment_validation --static-only
 python -m validation.security_validation
 python -m validation.endpoint_validation
 python -m validation.final_system_check
@@ -222,6 +226,32 @@ Validation:
 ```sh
 python -m validation.day17_scalability_validation
 ```
+
+## CI/CD and Release Workflow
+
+Day 18 deployment readiness adds:
+
+- GitHub Actions CI for syntax checks, Ruff linting, pytest, pip-audit, Bandit, Docker build, Compose config, and Day 18 static validation.
+- Tag-driven release workflow for `ai-service-v*` tags.
+- Production Compose overlay at `docker-compose.prod.yml`.
+- Environment examples for development, staging, and production under `deployment/env/`.
+- Deployment, rollback, health verification, backup, restore, and release-audit scripts under `scripts/`.
+- API uptime validation through `python -m validation.uptime_recovery_validation`.
+- Deployment readiness validation through `python -m validation.day18_deployment_validation`.
+
+Release commands:
+
+```sh
+python scripts/deploy.py --environment production --version 0.18.0
+python scripts/health_verify.py --base-url http://127.0.0.1:8000
+python scripts/backup.py
+python scripts/rollback.py --environment production --image-tag previous-tag
+```
+
+Documentation:
+
+- [DEPLOYMENT_RELEASE_WORKFLOW.md](docs/day18/DEPLOYMENT_RELEASE_WORKFLOW.md)
+- [PRODUCTION_READINESS_CHECKLIST.md](docs/day18/PRODUCTION_READINESS_CHECKLIST.md)
 
 ## Day 15 Documentation
 

@@ -1,0 +1,60 @@
+services:
+  ai-service:
+    image: ${AI_SERVICE_IMAGE:-tool-125-ai-service:day18}
+    environment:
+      APP_ENV: production
+      DEPLOYMENT_ENV: ${DEPLOYMENT_ENV:-production}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      RELEASE_VERSION: ${RELEASE_VERSION:-local}
+      JWT_AUTH_ENABLED: "true"
+      RATE_LIMIT: ${RATE_LIMIT:-60 per minute}
+      REQUEST_TIMEOUT_SECONDS: ${REQUEST_TIMEOUT_SECONDS:-15}
+      GROQ_MAX_RETRIES: ${GROQ_MAX_RETRIES:-3}
+      GROQ_BACKOFF_SECONDS: ${GROQ_BACKOFF_SECONDS:-1.0}
+      GROQ_TIMEOUT_SECONDS: ${GROQ_TIMEOUT_SECONDS:-10}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 768M
+        reservations:
+          memory: 256M
+
+  ai-worker:
+    image: ${AI_WORKER_IMAGE:-tool-125-ai-service:day18}
+    environment:
+      APP_ENV: production
+      DEPLOYMENT_ENV: ${DEPLOYMENT_ENV:-production}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      RELEASE_VERSION: ${RELEASE_VERSION:-local}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 768M
+        reservations:
+          memory: 256M
+
+  redis:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  postgres:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

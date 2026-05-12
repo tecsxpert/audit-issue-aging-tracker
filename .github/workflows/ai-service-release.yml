@@ -1,0 +1,65 @@
+name: AI Service Release
+
+on:
+  push:
+    tags:
+      - "ai-service-v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, for example 1.0.0"
+        required: true
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/tool-125-ai-service
+
+jobs:
+  release:
+    name: Build and Publish Release Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "value=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${GITHUB_REF_NAME#ai-service-v}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        run: |
+          docker build \
+            --label org.opencontainers.image.version=${{ steps.version.outputs.value }} \
+            --label org.opencontainers.image.revision=${{ github.sha }} \
+            -t "$IMAGE_NAME:${{ steps.version.outputs.value }}" \
+            -t "$IMAGE_NAME:latest" .
+
+      - name: Push image
+        run: |
+          docker push "$IMAGE_NAME:${{ steps.version.outputs.value }}"
+          docker push "$IMAGE_NAME:latest"
+
+      - name: Generate deployment audit preview
+        run: python scripts/release_audit.py --version "${{ steps.version.outputs.value }}" --git-sha "${{ github.sha }}" --dry-run
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ai-service-v${{ steps.version.outputs.value }}
+          name: AI Service v${{ steps.version.outputs.value }}
+          generate_release_notes: true
